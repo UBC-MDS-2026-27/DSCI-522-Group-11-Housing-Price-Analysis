@@ -1,0 +1,46 @@
+---
+title: "Relating Living Area, Year Built, and Quality to House Sale Prices in Ames, Iowa"
+author: "Nikita Wadnikop, Xiangtian Ji, Paromita Sengupta, Atinuke Wole-Ilori"
+date: today
+jupyter: python3
+
+---
+
+```{python}
+#| label: setup
+import os
+import pandas as pd
+import altair as alt
+from sklearn.model_selection import train_test_split
+
+```
+
+## Methods
+
+### Data acquisition
+
+The raw data are saved, unmodified, in `data/raw/`.
+
+```{python}
+#| label: load-raw
+data = "../data/raw/AmesHousing.csv"
+raw = pd.read_csv(data)
+```
+
+### Cleaning
+
+We keep only the target (sale price) and the three features in our question,
+and give them short, consistent names.
+We then check that the columns are numeric, that there are no missing values,
+and that there are no duplicated rows.
+
+```{python}
+#| label: clean-data
+cleaned = raw[["Gr Liv Area", "Overall Qual", "SalePrice"]].copy()
+cleaned.columns = ["living_area", "overall_quality", "sale_price"]
+cleaned["house_age"] = 2026 - raw["Year Built"]
+
+os.makedirs("../data/processed", exist_ok=True)
+cleaned.to_csv("../data/processed/ames_cleaned.csv", index=False)
+cleaned.shape
+```
