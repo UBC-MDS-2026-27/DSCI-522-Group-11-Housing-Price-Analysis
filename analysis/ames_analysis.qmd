@@ -29,10 +29,11 @@ raw = pd.read_csv(data)
 
 ### Cleaning
 
-We keep only the target (sale price) and the three features in our question,
-and give them short, consistent names.
-We then check that the columns are numeric, that there are no missing values,
-and that there are no duplicated rows.
+We keep the target (sale price) and the three features in our question,
+living area, overall quality, and house age. We give them more readable and
+consistent names. Instead of the year a house was built, we use its age,
+calculated as the reference year (2026) minus the year built, so that the
+feature is a number of years. The cleaned data is saved as a csv.
 
 ```{python}
 #| label: clean-data
@@ -42,5 +43,31 @@ cleaned["house_age"] = 2026 - raw["Year Built"]
 
 os.makedirs("../data/processed", exist_ok=True)
 cleaned.to_csv("../data/processed/ames_cleaned.csv", index=False)
-cleaned.shape
 ```
+
+
+### Training and Testing Data
+
+We are separating the train and test data with 80: 20 ratio. We are doing this
+before any exploratory analysis so the test set cannot influence our decisions
+and there is no leakage.
+
+```{python}
+#| label: split-data
+train_df, test_df = train_test_split(
+    cleaned, test_size=0.2, random_state= 552
+)
+
+train_df.to_csv("../data/processed/ames_train.csv", index=False)
+test_df.to_csv("../data/processed/ames_test.csv", index=False)
+
+```
+
+
+
+
+
+
+
+
+
