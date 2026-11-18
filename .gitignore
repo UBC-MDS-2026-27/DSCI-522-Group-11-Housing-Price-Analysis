@@ -1,3 +1,6 @@
 /.quarto/
 **/*.quarto_ipynb
 .Rhistory
+.DS_Store
+.venv/
+*_files/
