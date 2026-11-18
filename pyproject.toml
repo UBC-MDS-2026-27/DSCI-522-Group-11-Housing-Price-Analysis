@@ -1,0 +1,12 @@
+[project]
+name = "dsci-522-group-11-housing-price-analysis"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "altair>=6.3.0",
+    "jupyter>=1.1.1",
+    "pandas>=3.1.1",
+    "pyyaml>=6.0.3",
+    "requests>=2.34.2",
+    "scikit-learn>=1.9.1",
+]
