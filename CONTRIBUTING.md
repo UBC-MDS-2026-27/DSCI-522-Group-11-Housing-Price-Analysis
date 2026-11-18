@@ -25,7 +25,7 @@ create the virtual environment from the root of the repository:
 
 ``` bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group-11-Housing-Price-Analysis.git
-cd DSCI-522-Group-11-Housing-Price-Analysis.git
+cd DSCI-522-Group-11-Housing-Price-Analysis
 uv sync
 ```
 
