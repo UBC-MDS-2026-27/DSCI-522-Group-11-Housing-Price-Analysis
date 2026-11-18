@@ -65,6 +65,63 @@ test_df.to_csv("../data/processed/ames_test.csv", index=False)
 
 
 
+### Exploratory Data Analysis (EDA)
+```{python}
+#| label: tbl-eda-summary
+#| tbl-cap: "Summary statistics of the training data, with each feature's correlation with sale price."
+labels = {
+    "living_area": "Living area (sq ft)",
+    "house_age": "House age in 2026 (years)",
+    "overall_quality": "Overall quality (1-10)",
+    "sale_price": "Sale price (US$)",
+}
+features = ["living_area", "house_age", "overall_quality"]
+
+summary = (
+    train_df[features + ["sale_price"]]
+    .describe()
+    .T[["count", "mean", "std", "min", "50%", "max"]]
+    .rename(columns={"50%": "median"})
+)
+summary["corr. with price"] = train_df.corr()["sale_price"]
+summary.loc["sale_price", "corr. with price"] = None
+summary = summary.rename(index=labels).round(2)
+summary
+```
+
+```{python}
+#| label: fig-eda
+#| fig-cap: "Sale price against each feature in the training data. Points are semi-transparent to show overlap; the red line is a linear trend."
+points_area = alt.Chart(train_df).mark_circle(opacity=0.25).encode(
+    x=alt.X("living_area", title="Living area (sq ft)"),
+    y=alt.Y("sale_price", title="Sale price (US$)"),
+)
+line_area = points_area.transform_regression("living_area", "sale_price").mark_line(color="red")
+chart_area = points_area + line_area
+
+points_age = alt.Chart(train_df).mark_circle(opacity=0.25).encode(
+    x=alt.X("house_age", title="House age in 2026 (years)"),
+    y=alt.Y("sale_price", title="Sale price (US$)"),
+)
+line_age = points_age.transform_regression("house_age", "sale_price").mark_line(color="red")
+chart_age = points_age + line_age
+
+points_quality = alt.Chart(train_df).mark_circle(opacity=0.25).encode(
+    x=alt.X("overall_quality", title="Overall quality (1-10)"),
+    y=alt.Y("sale_price", title="Sale price (US$)"),
+)
+line_quality = points_quality.transform_regression("overall_quality", "sale_price").mark_line(color="red")
+chart_quality = points_quality + line_quality
+
+chart_area | chart_age | chart_quality
+```
+
+
+
+
+
+
+
 
 
 
