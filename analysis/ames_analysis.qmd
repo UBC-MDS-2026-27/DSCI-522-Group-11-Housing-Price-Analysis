@@ -9,31 +9,73 @@ jupyter: python3
 ```{python}
 #| label: setup
 import os
-import pandas as pd
+from pathlib import Path
+from urllib.request import urlretrieve
+
 import altair as alt
-from sklearn.model_selection import train_test_split
+import pandas as pd
+from sklearn.base import clone
+from sklearn.compose import ColumnTransformer
+from sklearn.dummy import DummyRegressor
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
+from sklearn.model_selection import KFold, cross_validate, train_test_split
+from sklearn.pipeline import Pipeline
+
+# Readable text in all figures
+alt.themes.register(
+    "report",
+    lambda: {
+        "config": {
+            "axis": {"labelFontSize": 12, "titleFontSize": 13},
+            "title": {"fontSize": 14},
+            "legend": {"labelFontSize": 12, "titleFontSize": 13},
+        }
+    },
+)
+alt.themes.enable("report")
 
 ```
 
 ## Methods
 
+### Overview of the approach
+
+We used Python with pandas for data handling, scikit-learn for the split, pipeline, and model (Pedregosa et al., 2011), and Altair for the figures (VanderPlas et al., 2018). We followed the same steps in order, and we describe each below. First, we downloaded the data from its original source and saved an unmodified copy. Second, we selected and cleaned the four columns we need and saved the result. Third, **before looking at the data in any detail**, we split it into a training set (80%) and a test set (20%). Fourth, we explored the training set only, with summary statistics and a plot. Fifth, we built a preprocessing and modelling pipeline and compared a baseline to a multiple linear regression using five-fold cross-validation on the training set. Last, we evaluated the final model once on the test set.
+
+### Model and metrics
+
+We use **multiple linear regression**, which predicts the price as a weighted sum of the features plus an intercept. We chose it for three reasons. It matches our question directly, because each fitted weight (coefficient) states how many dollars of price are associated with one more unit of a feature when the others are held fixed. It follows the hedonic pricing tradition described in the Introduction (Rosen, 1974). And it is a transparent, easily explained method that works as a sensible first model on a data set of this size (Hastie et al., 2009). To judge whether the model has learned anything useful, we compare it with a **baseline** that ignores all features and predicts the average training price for every house.
+
+Our main metric is the **root mean squared error (RMSE)**. It is the square root of the average squared difference between predicted and actual prices, so it is measured in US dollars and can be read as the size of a typical prediction error, with large errors counting extra. We chose it because the target is a dollar amount, so an error in dollars is easy to interpret, and because large mistakes on expensive houses are particularly costly. As a secondary metric we report **R²**, the share of the variation in price that the model explains (0 means no better than predicting the mean, 1 means perfect). On the test set we also report the **mean absolute error (MAE)**, the average size of the error without extra weight on large errors.
+
 ### Data acquisition
 
-The raw data are saved, unmodified, in `data/raw/`.
+The code below downloads the data from the Journal of Statistics Education website and saves an unmodified copy in `data/raw/`. If the download fails (for example, when there is no internet connection), the code falls back to a copy that was downloaded previously.
 
 ```{python}
 #| label: load-raw
-data = "../data/raw/AmesHousing.csv"
-raw = pd.read_csv(data)
+raw_dir = Path("../data/raw")
+raw_dir.mkdir(parents=True, exist_ok=True)
+
+url = "https://jse.amstat.org/v19n3/decock/AmesHousing.txt"
+raw_txt = raw_dir / "AmesHousing.txt"
+raw_csv = raw_dir / "AmesHousing.csv"
+
+try:
+    urlretrieve(url, raw_txt)               # unmodified copy of the original file
+    raw = pd.read_csv(raw_txt, sep="\t")    # the original file is tab-delimited
+except Exception as error:
+    print(f"Download failed ({error}); using the previously saved copy.")
+    raw = pd.read_csv(raw_csv)
+
+print(f"Raw data: {raw.shape[0]} rows, {raw.shape[1]} columns")
 ```
 
 ### Cleaning
 
-We keep the target (sale price) and the three features in our question,
-living area, overall quality, and house age. We give them more readable and
-consistent names. Instead of the year a house was built, we use its age,
-calculated as the reference year (2026) minus the year built, so that the
-feature is a number of years. The cleaned data is saved as a csv.
+We keep the target (sale price) and the three features in our question: living area, overall quality, and house age. We rename them to more readable, consistent names. Instead of the year a house was built we use its age, calculated as the reference year (2026) minus the year built, so that the feature is a number of years that is easy to interpret. The cleaned data are saved in `data/processed/`.
 
 ```{python}
 #| label: clean-data
@@ -45,30 +87,28 @@ os.makedirs("../data/processed", exist_ok=True)
 cleaned.to_csv("../data/processed/ames_cleaned.csv", index=False)
 ```
 
+### Training and testing data
 
-### Training and Testing Data
-
-We are separating the train and test data with 80: 20 ratio. We are doing this
-before any exploratory analysis so the test set cannot influence our decisions
-and there is no leakage.
+We split the data 80% / 20% into training and test sets (2,344 and 586 houses) with a fixed random seed so that the split can be reproduced. We do this **before any exploratory analysis or preprocessing**, so that the test set cannot influence any decision we make, which avoids leaking information from the test set into the model. From this point on, the test set is used only once, for the final evaluation.
 
 ```{python}
 #| label: split-data
-train_df, test_df = train_test_split(
-    cleaned, test_size=0.2, random_state= 552
-)
+train_df, test_df = train_test_split(cleaned, test_size=0.2, random_state=552)
 
 train_df.to_csv("../data/processed/ames_train.csv", index=False)
 test_df.to_csv("../data/processed/ames_test.csv", index=False)
 
+print(f"Training rows: {len(train_df)}   Test rows: {len(test_df)}")
 ```
 
+### Exploratory data analysis (training data only)
 
+We first summarize the training data (Table 1) and then plot sale price against each feature (Figure 1).
 
-### Exploratory Data Analysis (EDA)
+**Table 1. Summary statistics of the training data (n = 2,344), with each feature's correlation with sale price.**
+
 ```{python}
-#| label: tbl-eda-summary
-#| tbl-cap: "Summary statistics of the training data, with each feature's correlation with sale price."
+#| label: eda-summary
 labels = {
     "living_area": "Living area (sq ft)",
     "house_age": "House age in 2026 (years)",
@@ -80,226 +120,282 @@ features = ["living_area", "house_age", "overall_quality"]
 summary = (
     train_df[features + ["sale_price"]]
     .describe()
-    .T[["count", "mean", "std", "min", "50%", "max"]]
-    .rename(columns={"50%": "median"})
+    .T[["mean", "std", "min", "50%", "max"]]
+    .rename(columns={"mean": "Mean", "std": "Std. dev.", "min": "Min",
+                     "50%": "Median", "max": "Max"})
 )
-summary["corr. with price"] = train_df.corr()["sale_price"]
-summary.loc["sale_price", "corr. with price"] = None
+summary["Correlation with price"] = train_df.corr()["sale_price"]
+summary.loc["sale_price", "Correlation with price"] = None
 summary = summary.rename(index=labels).round(2)
 summary
 ```
 
+**Figure 1. Sale price against each of the three features in the training data (n = 2,344). Each blue dot is one house; dots are semi-transparent so that dense regions look darker, and overall quality is shown with a small horizontal jitter because it only takes whole-number values. The red line is the straight-line (linear) trend.**
+
 ```{python}
 #| label: fig-eda
-#| fig-cap: "Sale price against each feature in the training data. Points are semi-transparent to show overlap; the red line is a linear trend."
-points_area = alt.Chart(train_df).mark_circle(opacity=0.25).encode(
-    x=alt.X("living_area", title="Living area (sq ft)"),
-    y=alt.Y("sale_price", title="Sale price (US$)"),
-)
-line_area = points_area.transform_regression("living_area", "sale_price").mark_line(color="red")
-chart_area = points_area + line_area
+price_axis = alt.Axis(format="$,.0f")
 
-points_age = alt.Chart(train_df).mark_circle(opacity=0.25).encode(
-    x=alt.X("house_age", title="House age in 2026 (years)"),
-    y=alt.Y("sale_price", title="Sale price (US$)"),
-)
-line_age = points_age.transform_regression("house_age", "sale_price").mark_line(color="red")
-chart_age = points_age + line_age
 
-points_quality = alt.Chart(train_df).mark_circle(opacity=0.25).encode(
-    x=alt.X("overall_quality", title="Overall quality (1-10)"),
-    y=alt.Y("sale_price", title="Sale price (US$)"),
-)
-line_quality = points_quality.transform_regression("overall_quality", "sale_price").mark_line(color="red")
-chart_quality = points_quality + line_quality
+def scatter_with_trend(column, x_title):
+    base = alt.Chart(train_df)
+    jitter = column == "overall_quality"
+    x_field = "jittered" if jitter else column
+    points = (
+        base.transform_calculate(jittered=f"datum.{column} + (random() - 0.5) * 0.5")
+        .mark_circle(opacity=0.25, size=25, color="steelblue")
+        .encode(
+            x=alt.X(f"{x_field}:Q", title=x_title, scale=alt.Scale(zero=False)),
+            y=alt.Y("sale_price:Q", title="Sale price (US$)", axis=price_axis),
+        )
+    )
+    trend = (
+        base.transform_regression(column, "sale_price")
+        .mark_line(color="red", size=3)
+        .encode(
+            x=alt.X(f"{column}:Q", title=x_title),
+            y=alt.Y("sale_price:Q", title="Sale price (US$)", axis=price_axis),
+        )
+    )
+    return (points + trend).properties(width=260, height=260)
 
-chart_area | chart_age | chart_quality
+
+(
+    scatter_with_trend("living_area", "Living area (sq ft)")
+    | scatter_with_trend("house_age", "House age in 2026 (years)")
+    | scatter_with_trend("overall_quality", "Overall quality (1 = very poor, 10 = very excellent)")
+)
 ```
 
-### Processing pipeline and baseline
+### Preprocessing pipeline and baseline
 
-We use living area, house age, and overall quality as numeric predictors.
-Median imputation is included in the preprocessing pipeline to handle missing
-predictor values. Predictors are retained in their original units.
+All three features are numeric, and we keep them in their original units (linear regression does not require rescaling, and the original units let us read the coefficients directly in dollars). None of the four columns has missing values in this data, but we include median imputation in the pipeline as a safeguard so that the same pipeline would still work on data with gaps. The imputer is fitted inside each cross-validation fold, so no information leaks from the held-out fold.
 
-We evaluate a mean-prediction baseline using five-fold cross-validation within
-the training set. In each fold, the baseline predicts the mean sale price of
-that fold's training observations. Performance is summarized using root mean
-squared error (RMSE), measured in US dollars, and R-squared.
+We evaluate the mean-prediction baseline using five-fold cross-validation within the training set: the training set is divided into five parts, and each part in turn is held out while the model is fitted on the other four. In each fold, the baseline predicts the mean price of that fold's training houses.
 
 ```{python}
 #| label: preprocessing-baseline
-
-from sklearn.compose import ColumnTransformer
-from sklearn.dummy import DummyRegressor
-from sklearn.impute import SimpleImputer
-from sklearn.model_selection import KFold, cross_validate
-from sklearn.pipeline import Pipeline
-
 numeric_features = ["living_area", "house_age", "overall_quality"]
 
 X_train = train_df[numeric_features]
 y_train = train_df["sale_price"]
+X_test = test_df[numeric_features]
+y_test = test_df["sale_price"]
 
 preprocessor = ColumnTransformer(
-    transformers=[
-        ("numeric", SimpleImputer(strategy="median"), numeric_features)
-    ],
+    transformers=[("numeric", SimpleImputer(strategy="median"), numeric_features)],
     remainder="drop",
 )
 
 dummy_pipeline = Pipeline(
-    steps=[
-        ("preprocessor", preprocessor),
-        ("regressor", DummyRegressor(strategy="mean")),
-    ]
+    steps=[("preprocessor", preprocessor), ("regressor", DummyRegressor(strategy="mean"))]
 )
 
 cv = KFold(n_splits=5, shuffle=True, random_state=552)
+scoring = {"rmse": "neg_root_mean_squared_error", "r2": "r2"}
 
-cv_results = cross_validate(
-    dummy_pipeline,
-    X_train,
-    y_train,
-    cv=cv,
-    scoring={
-        "rmse": "neg_root_mean_squared_error",
-        "r2": "r2",
-    },
-    error_score="raise",
+dummy_cv = cross_validate(
+    dummy_pipeline, X_train, y_train, cv=cv, scoring=scoring, error_score="raise"
 )
 
-# Convert scikit-learn's negative RMSE scores back to positive errors.
+# scikit-learn reports errors as negative numbers; convert RMSE back to positive dollars
 fold_scores = pd.DataFrame(
-    {
-        "RMSE (US$)": -cv_results["test_rmse"],
-        "R-squared": cv_results["test_r2"],
-    }
+    {"RMSE (US$)": -dummy_cv["test_rmse"], "R-squared": dummy_cv["test_r2"]}
 )
 ```
 
-```{python}
-#| label: tbl-dummy-baseline
-#| tbl-cap: "Mean and standard deviation of the dummy baseline scores across five cross-validation folds."
+### Main model: multiple linear regression
 
-baseline_summary = (
-    fold_scores
-    .agg(["mean", "std"])
-    .rename(index={"mean": "CV mean", "std": "CV standard deviation"})
-    .round(4)
-)
-
-baseline_summary
-```
-
-The negative R^2 in the baseline is normal, because every single fold uses the average sale price within each fold. This will be different for the validation. We can use the same five fold to compare it with the linear regression model later on.
-
-
-### Main model
-
-We fit a multiple linear regression model using the same predictors,
-preprocessing pipeline, and five cross-validation folds as the dummy baseline.
-The test set is reserved for the final evaluation.
+We fit the multiple linear regression using the same predictors, preprocessing, and five cross-validation folds as the baseline, so the two are compared fairly. We did not tune anything and did not choose between models using the test set. The test set is reserved for the final evaluation.
 
 ```{python}
 #| label: linear-model-cv
+linear_pipeline = clone(dummy_pipeline).set_params(regressor=LinearRegression())
 
-from pathlib import Path
-from sklearn.base import clone
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score, root_mean_squared_error
-
-linear_pipeline = clone(dummy_pipeline).set_params(
-    regressor=LinearRegression()
-)
-
-linear_cv_results = cross_validate(
-    linear_pipeline,
-    X_train,
-    y_train,
-    cv=cv,
-    scoring={
-        "rmse": "neg_root_mean_squared_error",
-        "r2": "r2",
-    },
-    error_score="raise",
+linear_cv = cross_validate(
+    linear_pipeline, X_train, y_train, cv=cv, scoring=scoring, error_score="raise"
 )
 
 linear_fold_scores = pd.DataFrame(
-    {
-        "RMSE (US$)": -linear_cv_results["test_rmse"],
-        "R-squared": linear_cv_results["test_r2"],
-    }
+    {"RMSE (US$)": -linear_cv["test_rmse"], "R-squared": linear_cv["test_r2"]}
 )
-
-linear_cv_results
-
-linear_fold_scores
 ```
 
-```{python}
-#| label: tbl-model-comparison
-#| tbl-cap: "Mean performance and standard deviation across the same five training-set cross-validation folds."
+Finally, we fit the pipeline on the full training set and evaluate it once on the held-out test set. The coefficients come from this final fit.
 
+```{python}
+#| label: final-fit
+linear_pipeline.fit(X_train, y_train)
+linear_test_predictions = linear_pipeline.predict(X_test)
+
+dummy_final = clone(dummy_pipeline).fit(X_train, y_train)
+dummy_test_predictions = dummy_final.predict(X_test)
+```
+
+## Result
+
+### Exploring the training data
+
+Table 1 shows the training data. Houses in the training set have a median living area of 1,450 sq ft, a median age of 53 years, and a median overall quality of 6 out of 10, with a mean price of about US\$181,000. All three features are associated with price in the expected direction. Overall quality has the strongest correlation with price (0.80), followed by living area (0.70), while age has a moderate negative correlation (−0.56). Figure 1 shows these relationships: price rises with living area and with quality (more steeply at the higher quality ratings), and falls with age. Figure 1 also shows that the spread of prices is wider for bigger, newer, and higher-quality houses, and that a handful of very large houses sell at much lower prices than the trend suggests (five training houses have more than 4,000 sq ft of living area, and three of them sold for less than US\$190,000).
+
+The three features are also related to each other in the training data. Overall quality is moderately correlated with living area (0.57) and negatively correlated with age (−0.60), so newer houses tend to be rated higher. This is relevant for interpreting the model below.
+
+### Model comparison with cross-validation
+
+Table 2 compares the baseline with the linear regression across the same five cross-validation folds in the training set.
+
+**Table 2. Mean and standard deviation of performance across the same five cross-validation folds in the training set (lower RMSE and higher R² are better).**
+
+```{python}
+#| label: model-comparison
 model_cv_summary = pd.DataFrame(
     {
         model_name: {
-            "CV RMSE (US$)": scores["RMSE (US$)"].mean(),
-            "RMSE SD (US$)": scores["RMSE (US$)"].std(),
-            "CV R-squared": scores["R-squared"].mean(),
-            "R-squared SD": scores["R-squared"].std(),
+            "RMSE, mean (US$)": scores["RMSE (US$)"].mean(),
+            "RMSE, std. dev. (US$)": scores["RMSE (US$)"].std(),
+            "R², mean": scores["R-squared"].mean(),
+            "R², std. dev.": scores["R-squared"].std(),
         }
         for model_name, scores in {
-            "Dummy (mean)": fold_scores,
+            "Baseline (always predict the mean price)": fold_scores,
             "Multiple linear regression": linear_fold_scores,
         }.items()
     }
 ).T
 
 model_cv_summary.round(
-    {
-        "CV RMSE (US$)": 2,
-        "RMSE SD (US$)": 2,
-        "CV R-squared": 4,
-        "R-squared SD": 4,
-    }
+    {"RMSE, mean (US$)": 0, "RMSE, std. dev. (US$)": 0, "R², mean": 3, "R², std. dev.": 3}
 )
 ```
 
-We fit the specified pipeline on the full training set and evaluate it once
-on the held-out test set. Test performance is not used to select features
-or tune the model.
+The baseline has an RMSE of about US\$80,000 and an R² of essentially zero (−0.004), which is what we expect from a model that always predicts the average; its R² is very slightly negative because each fold's average is not exactly the average of the held-out fold. The linear regression reduces the RMSE to about US\$39,800, roughly half the baseline error, and raises R² to about 0.75. The fold-to-fold variation (a standard deviation of about US\$4,700 in RMSE) is much smaller than the gap between the two models, so the improvement is not an accident of one particular fold.
+
+### Final evaluation on the held-out test set
+
+Table 3 shows the performance of the final model on the 586 houses in the test set, which were not used in any earlier step. We include the baseline's test performance for reference.
+
+**Table 3. Performance on the held-out test set (n = 586).**
 
 ```{python}
-#| label: tbl-linear-model-test
-#| tbl-cap: "Final held-out test performance of the multiple linear regression model."
-
-linear_pipeline.fit(X_train, y_train)
-
-X_test = test_df[numeric_features]
-y_test = test_df["sale_price"]
-
-linear_test_predictions = linear_pipeline.predict(X_test)
-
-linear_test_metrics = pd.DataFrame(
+#| label: linear-model-test
+test_metrics = pd.DataFrame(
     {
-        "Model": ["Multiple linear regression"],
-        "Training observations": [len(y_train)],
-        "Test observations": [len(y_test)],
         "Test RMSE (US$)": [
-            root_mean_squared_error(y_test, linear_test_predictions)
+            root_mean_squared_error(y_test, dummy_test_predictions),
+            root_mean_squared_error(y_test, linear_test_predictions),
         ],
-        "Test R-squared": [
-            r2_score(y_test, linear_test_predictions)
+        "Test MAE (US$)": [
+            mean_absolute_error(y_test, dummy_test_predictions),
+            mean_absolute_error(y_test, linear_test_predictions),
         ],
-    }
-).set_index("Model")
-
-linear_test_metrics.round(
-    {
-        "Test RMSE (US$)": 2,
-        "Test R-squared": 4,
-    }
+        "Test R²": [
+            r2_score(y_test, dummy_test_predictions),
+            r2_score(y_test, linear_test_predictions),
+        ],
+    },
+    index=["Baseline (always predict the mean price)", "Multiple linear regression"],
 )
+
+test_metrics.round({"Test RMSE (US$)": 0, "Test MAE (US$)": 0, "Test R²": 3})
 ```
+
+On the test set the linear model has an RMSE of about US\$38,600, an MAE of about US\$28,100, and an R² of 0.76, compared with an RMSE of about US\$78,900 for the baseline. These test results are very close to the cross-validation results in Table 2 (an RMSE of about US\$39,800 and an R² of about 0.75), which suggests that the model's performance in cross-validation was not overly optimistic. Relative to the mean sale price of about US\$181,000, a typical error of US\$38,600 is about one fifth of the price of an average house.
+
+Figure 2 compares the model's predictions with the actual sale prices in the test set. The points follow the dashed line of perfect prediction closely at lower and middle prices, but they scatter more widely around it for expensive houses, and the model tends to predict too low for the most expensive houses. The test-set errors were smaller in dollar terms for houses with lower predicted prices than for houses with higher predicted prices (a standard deviation of about US\$25,500 for the half of the test houses with the lower predictions, compared with about US\$48,000 for the other half). Two test houses (both small, with an overall quality rating of 1 or 2 and built about 80 to 100 years ago) received a *negative* predicted price.
+
+**Figure 2. Predicted against actual sale price for the 586 houses in the test set. Each blue dot is one house, semi-transparent to show overlap. The red dashed line shows perfect prediction (predicted price = actual price); points above the line are over-predictions and points below it are under-predictions.**
+
+```{python}
+#| label: fig-predictions
+pred_df = pd.DataFrame(
+    {"actual": y_test.to_numpy(), "predicted": linear_test_predictions}
+)
+axis_min = float(min(pred_df.min()))
+axis_max = float(max(pred_df.max()))
+shared_scale = alt.Scale(domain=[axis_min, axis_max])
+
+points = (
+    alt.Chart(pred_df)
+    .mark_circle(opacity=0.35, size=40, color="steelblue")
+    .encode(
+        x=alt.X("actual:Q", title="Actual sale price (US$)", scale=shared_scale,
+                axis=alt.Axis(format="$,.0f")),
+        y=alt.Y("predicted:Q", title="Predicted sale price (US$)", scale=shared_scale,
+                axis=alt.Axis(format="$,.0f")),
+    )
+)
+identity = (
+    alt.Chart(pd.DataFrame({"x": [axis_min, axis_max], "y": [axis_min, axis_max]}))
+    .mark_line(color="red", strokeDash=[6, 4], size=2)
+    .encode(x="x:Q", y="y:Q")
+)
+(points + identity).properties(width=450, height=450)
+```
+
+### What the fitted model says about each feature
+
+Table 4 shows the coefficients of the final model, fitted on the full training set. Each coefficient is the change in the predicted price associated with a one-unit increase in that feature, with the other two features held fixed.
+
+**Table 4. Coefficients of the multiple linear regression fitted on the training set (n = 2,344).**
+
+```{python}
+#| label: coefficients
+fitted = linear_pipeline.named_steps["regressor"]
+coef_table = pd.DataFrame(
+    {
+        "Change in predicted price (US$)": list(fitted.coef_) + [fitted.intercept_],
+        "Per": ["1 additional square foot", "1 additional year of age",
+                "1 additional quality point", "(intercept)"],
+    },
+    index=["Living area", "House age", "Overall quality", "Intercept"],
+)
+coef_table["Change in predicted price (US$)"] = coef_table["Change in predicted price (US$)"].round(0)
+coef_table
+```
+
+Holding the other two features fixed, each additional point of overall quality is associated with about US\$26,400 higher price, each additional square foot of living area with about US\$62 higher price, and each additional year of age with about US\$485 lower price. For example, ten extra years of age corresponds to about US\$4,800 less, and 100 extra square feet to about US\$6,200 more.
+
+## Discussion
+
+### Summary of findings
+
+Our question was how well the living area, the age, and the overall quality of a house predict its sale price in Ames, and how each feature is associated with price. The answer is that these three features alone predict sale price reasonably well. A multiple linear regression cut the typical prediction error roughly in half compared with always guessing the average price (a test RMSE of about US\$38,600 against about US\$78,900), and it explained about 76% of the variation in sale prices of houses it had not seen. The cross-validation and test results agree, so we have no sign of overfitting. Quality, size, and age each contribute in the expected direction when the others are held fixed.
+
+### What this means in the real-world context
+
+In practical terms, the model gives a quick "ballpark" price from three facts that are easy to look up. A typical error of around US\$39,000 is useful for a first estimate or for flagging properties that look very far from the expected price, but it is too large for the model to replace an appraisal: for a house selling at the mean price, the error is around a fifth of the price. The coefficients also give a concrete way of comparing features. One additional point of overall quality is associated with about as much price as roughly 420 additional square feet of living area (26,400 divided by 62), which suggests that quality of materials and finish is a major driver of value, comparable to substantial additions of space. This is consistent with the hedonic view that buyers pay for a bundle of characteristics (Rosen, 1974; Sirmans et al., 2005).
+
+### Was this what we expected?
+
+Partly. We expected price to rise with size and quality and to fall with age, and the signs of all three coefficients agree with this. We also expected quality to be the strongest single predictor, and it was (a correlation of 0.80 with price). What was less obvious was how small the age coefficient is: age had a clear negative correlation with price (−0.56) on its own, but when quality and living area are held fixed, a year of age is associated with only about US\$485 less. A likely explanation is that age and quality are strongly related in this data (a correlation of −0.60 in the training set), so much of the apparent effect of age is picked up by the quality rating. We did not test this explanation directly, for example by fitting a model with and without quality, so it should be treated as a hypothesis. We also did not expect the model to produce negative prices, which is a clear sign that a straight-line model is too simple at the low end of the market.
+
+### Assumptions and limitations
+
+- **Linearity and additivity.** Linear regression assumes that each feature changes the price by the same dollar amount at every level, and that the effects simply add up. Figure 1 suggests this is only approximately true; for example, price rises more steeply at the higher quality ratings. A larger share of the variation might be explained if the model allowed curved relationships or interactions.
+- **Unequal error spread.** Errors were noticeably larger for expensive houses (Figure 2 and the standard deviations reported in the Results). Linear regression is typically fitted assuming errors of similar size at every price level, so RMSE is a summary that hides the fact that predictions are less reliable for expensive houses. Modelling the logarithm of price is a common remedy that would also rule out negative predictions, but we did not try it, to keep the model's coefficients interpretable in dollars.
+- **Unusual houses.** The training data include five houses with more than 4,000 sq ft of living area, three of which sold at low prices for their size. We kept them, because removing observations after seeing the training data is a judgement call we did not want to make without a clear rule, but they can influence the fitted line.
+- **Few features.** We used only three features. The data set has 82 columns, including the neighborhood, lot size, garage, and basement, and the unexplained 24% of the variation in price is probably due in large part to such missing information. Location in particular is a major driver of house prices, and our model ignores it.
+- **The overall quality rating is subjective.** It is assigned by an assessor, not measured, and it already reflects judgements about material and finish that may be correlated with price itself.
+- **Age is measured from 2026.** We computed the age as 2026 minus the year built for all houses, although the houses were sold between 2006 and 2010. This is only a constant shift for each house and does not change the ordering of the ages, but the age at the time of sale would be a more natural measure.
+- **Association, not causation.** The coefficients describe how prices differ between houses in this data, not what would happen if a particular house were renovated. A higher quality rating is also correlated with features we did not include.
+- **Scope.** The data describe one small city over five years that include the 2008 financial crisis and housing downturn. The relationships may not hold in other cities, or in the market today.
+- **A single split.** We evaluated on one random test set of 586 houses. The cross-validation spread (about US\$4,700 in RMSE) shows that the exact RMSE depends on which houses are included, so differences of a few thousand dollars should not be over-interpreted.
+
+### Impact
+
+Models of this kind could help assessors and lenders to flag properties whose price is very different from what simple characteristics would suggest, and could give first-time buyers and sellers an anchor for negotiation, because the method is simple enough to be explained in a sentence. Because the model is less accurate for expensive houses and ignores location, however, it should be used as a screening or starting tool and not as a substitute for a professional appraisal; relying on it alone could systematically under-value expensive houses and misprice houses in desirable or undesirable neighborhoods.
+
+### Future questions
+
+This work leads to several follow-up questions. How much does accuracy improve if we add neighborhood and lot characteristics, and does location matter more than quality? Would predicting the logarithm of price, or using a more flexible method such as a regularized regression or a tree-based model, reduce the large errors for expensive houses and avoid negative predictions (Hastie et al., 2009)? Does the relationship between age and price change when quality is left out of the model, as we suspect? Do the same coefficients hold in other cities and in more recent years? Finally, are the model's errors spread fairly across neighborhoods and price levels, which matters if such a model were ever used in assessment or lending?
+
+## References
+
+- De Cock, D. (2011). Ames, Iowa: Alternative to the Boston Housing Data as an End of Semester Regression Project. *Journal of Statistics Education, 19*(3), 1–15. <https://doi.org/10.1080/10691898.2011.11889627>
+- Harrison, D., & Rubinfeld, D. L. (1978). Hedonic housing prices and the demand for clean air. *Journal of Environmental Economics and Management, 5*(1), 81–102. <https://doi.org/10.1016/0095-0696(78)90006-2>
+- Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer.
+- Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., … Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830.
+- Rosen, S. (1974). Hedonic prices and implicit markets: Product differentiation in pure competition. *Journal of Political Economy, 82*(1), 34–55. <https://doi.org/10.1086/260169>
+- Sirmans, G. S., Macpherson, D. A., & Zietz, E. N. (2005). The composition of hedonic pricing models. *Journal of Real Estate Literature, 13*(1), 3–43.
+- VanderPlas, J., Granger, B., Heer, J., Moritz, D., Wongsuphasawat, K., Satyanarayan, A., … Sievert, S. (2018). Altair: Interactive statistical visualizations for Python. *Journal of Open Source Software, 3*(32), 1057. <https://doi.org/10.21105/joss.01057>
 
