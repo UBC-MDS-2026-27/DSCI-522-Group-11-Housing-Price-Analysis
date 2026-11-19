@@ -7,8 +7,8 @@ This outlines how to propose a change to the Housing Price project.
 Small typos or grammatical errors in documentation may be edited directly using
 the GitHub web interface, so long as the changes are made in the _source_ file.
 
-*  YES: you edit the Quarto source file `...`.
-*  NO: you edit the rendered `....html` or `.pdf`.
+*  YES: you edit the Quarto source file `analysis/ames_analysis.qmd`.
+*  NO: you edit the rendered `analysis/ames_analysis.html` or `.pdf`.
 
 ### Prerequisites
 
