@@ -192,10 +192,114 @@ baseline_summary = (
 baseline_summary
 ```
 
+The negative R^2 in the baseline is normal, because every single fold uses the average sale price within each fold. This will be different for the validation. We can use the same five fold to compare it with the linear regression model later on.
 
 
+### Main model
 
+We fit a multiple linear regression model using the same predictors,
+preprocessing pipeline, and five cross-validation folds as the dummy baseline.
+The test set is reserved for the final evaluation.
 
+```{python}
+#| label: linear-model-cv
 
+from pathlib import Path
+from sklearn.base import clone
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, root_mean_squared_error
 
+linear_pipeline = clone(dummy_pipeline).set_params(
+    regressor=LinearRegression()
+)
+
+linear_cv_results = cross_validate(
+    linear_pipeline,
+    X_train,
+    y_train,
+    cv=cv,
+    scoring={
+        "rmse": "neg_root_mean_squared_error",
+        "r2": "r2",
+    },
+    error_score="raise",
+)
+
+linear_fold_scores = pd.DataFrame(
+    {
+        "RMSE (US$)": -linear_cv_results["test_rmse"],
+        "R-squared": linear_cv_results["test_r2"],
+    }
+)
+
+linear_cv_results
+
+linear_fold_scores
+```
+
+```{python}
+#| label: tbl-model-comparison
+#| tbl-cap: "Mean performance and standard deviation across the same five training-set cross-validation folds."
+
+model_cv_summary = pd.DataFrame(
+    {
+        model_name: {
+            "CV RMSE (US$)": scores["RMSE (US$)"].mean(),
+            "RMSE SD (US$)": scores["RMSE (US$)"].std(),
+            "CV R-squared": scores["R-squared"].mean(),
+            "R-squared SD": scores["R-squared"].std(),
+        }
+        for model_name, scores in {
+            "Dummy (mean)": fold_scores,
+            "Multiple linear regression": linear_fold_scores,
+        }.items()
+    }
+).T
+
+model_cv_summary.round(
+    {
+        "CV RMSE (US$)": 2,
+        "RMSE SD (US$)": 2,
+        "CV R-squared": 4,
+        "R-squared SD": 4,
+    }
+)
+```
+
+We fit the specified pipeline on the full training set and evaluate it once
+on the held-out test set. Test performance is not used to select features
+or tune the model.
+
+```{python}
+#| label: tbl-linear-model-test
+#| tbl-cap: "Final held-out test performance of the multiple linear regression model."
+
+linear_pipeline.fit(X_train, y_train)
+
+X_test = test_df[numeric_features]
+y_test = test_df["sale_price"]
+
+linear_test_predictions = linear_pipeline.predict(X_test)
+
+linear_test_metrics = pd.DataFrame(
+    {
+        "Model": ["Multiple linear regression"],
+        "Training observations": [len(y_train)],
+        "Test observations": [len(y_test)],
+        "Test RMSE (US$)": [
+            root_mean_squared_error(y_test, linear_test_predictions)
+        ],
+        "Test R-squared": [
+            r2_score(y_test, linear_test_predictions)
+        ],
+    }
+).set_index("Model")
+
+linear_test_metrics.round(
+    {
+        "Test RMSE (US$)": 2,
+        "Test R-squared": 4,
+    }
+)
+```
 
