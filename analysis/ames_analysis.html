@@ -2419,22 +2419,22 @@ Table 1: Summary statistics of the training data, with each feature’s correla
 <div aria-describedby="fig-eda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 
 <style>
-#altair-viz-756281e26743476c9873378978c29223.vega-embed {
+#altair-viz-417b1a131d9d420f8b3b0be248f9b4dd.vega-embed {
 width: 100%;
 display: flex;
 }
-#altair-viz-756281e26743476c9873378978c29223.vega-embed details,
-#altair-viz-756281e26743476c9873378978c29223.vega-embed details summary {
+#altair-viz-417b1a131d9d420f8b3b0be248f9b4dd.vega-embed details,
+#altair-viz-417b1a131d9d420f8b3b0be248f9b4dd.vega-embed details summary {
 position: relative;
 }
 </style>
-<div id="altair-viz-756281e26743476c9873378978c29223"></div>
+<div id="altair-viz-417b1a131d9d420f8b3b0be248f9b4dd"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-756281e26743476c9873378978c29223") {
-      outputDiv = document.getElementById("altair-viz-756281e26743476c9873378978c29223");
+    if (outputDiv.id !== "altair-viz-417b1a131d9d420f8b3b0be248f9b4dd") {
+      outputDiv = document.getElementById("altair-viz-417b1a131d9d420f8b3b0be248f9b4dd");
     }
 
     const paths = {
@@ -2581,6 +2581,228 @@ Table 2: Mean and standard deviation of the dummy baseline scores across five c
 <th data-quarto-table-cell-role="th">CV standard deviation</th>
 <td>5729.1958</td>
 <td>0.0026</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The negative R^2 in the baseline is normal, because every single fold uses the average sale price within each fold. This will be different for the validation. We can use the same five fold to compare it with the linear regression model later on.</p>
+</section>
+<section id="main-model" class="level3">
+<h3 class="anchored" data-anchor-id="main-model">Main model</h3>
+<p>We fit a multiple linear regression model using the same predictors, preprocessing pipeline, and five cross-validation folds as the dummy baseline. The test set is reserved for the final evaluation.</p>
+<div id="cell-linear-model-cv" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> clone</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score, root_mean_squared_error</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>linear_pipeline <span class="op">=</span> clone(dummy_pipeline).set_params(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    regressor<span class="op">=</span>LinearRegression()</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>linear_cv_results <span class="op">=</span> cross_validate(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    linear_pipeline,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    X_train,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    y_train,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>cv,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span>{</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;rmse&quot;</span>: <span class="st">&quot;neg_root_mean_squared_error&quot;</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;r2&quot;</span>: <span class="st">&quot;r2&quot;</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    error_score<span class="op">=</span><span class="st">&quot;raise&quot;</span>,</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>linear_fold_scores <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;RMSE (US$)&quot;</span>: <span class="op">-</span>linear_cv_results[<span class="st">&quot;test_rmse&quot;</span>],</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;R-squared&quot;</span>: linear_cv_results[<span class="st">&quot;test_r2&quot;</span>],</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>linear_cv_results</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>linear_fold_scores</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="linear-model-cv" class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">RMSE (US$)</th>
+<th data-quarto-table-cell-role="th">R-squared</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>41432.612778</td>
+<td>0.752548</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>44157.264825</td>
+<td>0.737192</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>43507.695633</td>
+<td>0.704784</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>33253.510101</td>
+<td>0.780990</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>36701.285382</td>
+<td>0.782558</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_cv_summary <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        model_name: {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;CV RMSE (US$)&quot;</span>: scores[<span class="st">&quot;RMSE (US$)&quot;</span>].mean(),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;RMSE SD (US$)&quot;</span>: scores[<span class="st">&quot;RMSE (US$)&quot;</span>].std(),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;CV R-squared&quot;</span>: scores[<span class="st">&quot;R-squared&quot;</span>].mean(),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;R-squared SD&quot;</span>: scores[<span class="st">&quot;R-squared&quot;</span>].std(),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> model_name, scores <span class="kw">in</span> {</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Dummy (mean)&quot;</span>: fold_scores,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Multiple linear regression&quot;</span>: linear_fold_scores,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        }.items()</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>).T</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>model_cv_summary.<span class="bu">round</span>(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;CV RMSE (US$)&quot;</span>: <span class="dv">2</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;RMSE SD (US$)&quot;</span>: <span class="dv">2</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;CV R-squared&quot;</span>: <span class="dv">4</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;R-squared SD&quot;</span>: <span class="dv">4</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-model-comparison" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 3: Mean performance and standard deviation across the same five training-set cross-validation folds.
+</figcaption>
+<div aria-describedby="tbl-model-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">CV RMSE (US$)</th>
+<th data-quarto-table-cell-role="th">RMSE SD (US$)</th>
+<th data-quarto-table-cell-role="th">CV R-squared</th>
+<th data-quarto-table-cell-role="th">R-squared SD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Dummy (mean)</th>
+<td>80001.16</td>
+<td>5729.20</td>
+<td>-0.0037</td>
+<td>0.0026</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Multiple linear regression</th>
+<td>39810.47</td>
+<td>4686.58</td>
+<td>0.7516</td>
+<td>0.0325</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>We fit the specified pipeline on the full training set and evaluate it once on the held-out test set. Test performance is not used to select features or tune the model.</p>
+<div class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>linear_pipeline.fit(X_train, y_train)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> test_df[numeric_features]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> test_df[<span class="st">&quot;sale_price&quot;</span>]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>linear_test_predictions <span class="op">=</span> linear_pipeline.predict(X_test)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>linear_test_metrics <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Model&quot;</span>: [<span class="st">&quot;Multiple linear regression&quot;</span>],</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Training observations&quot;</span>: [<span class="bu">len</span>(y_train)],</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test observations&quot;</span>: [<span class="bu">len</span>(y_test)],</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test RMSE (US$)&quot;</span>: [</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            root_mean_squared_error(y_test, linear_test_predictions)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test R-squared&quot;</span>: [</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>            r2_score(y_test, linear_test_predictions)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>).set_index(<span class="st">&quot;Model&quot;</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>linear_test_metrics.<span class="bu">round</span>(</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test RMSE (US$)&quot;</span>: <span class="dv">2</span>,</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test R-squared&quot;</span>: <span class="dv">4</span>,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-linear-model-test" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="11">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-linear-model-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 4: Final held-out test performance of the multiple linear regression model.
+</figcaption>
+<div aria-describedby="tbl-linear-model-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Training observations</th>
+<th data-quarto-table-cell-role="th">Test observations</th>
+<th data-quarto-table-cell-role="th">Test RMSE (US$)</th>
+<th data-quarto-table-cell-role="th">Test R-squared</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Model</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Multiple linear regression</th>
+<td>2344</td>
+<td>586</td>
+<td>38631.24</td>
+<td>0.7603</td>
 </tr>
 </tbody>
 </table>
