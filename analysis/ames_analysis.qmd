@@ -2,6 +2,11 @@
 title: "Relating Living Area, Year Built, and Quality to House Sale Prices in Ames, Iowa"
 author: "Nikita Wadnikop, Xiangtian Ji, Paromita Sengupta, Atinuke Wole-Ilori"
 date: today
+format:
+  html:
+    toc: true
+    code-fold: true
+    embed-resources: true
 jupyter: python3
 
 ---
