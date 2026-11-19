@@ -2292,7 +2292,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </header>
 
 
-<div id="cell-setup" class="cell" data-execution_count="1">
+<div id="setup" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -2308,55 +2308,8 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_absolute_error, r2_score, root_mean_squared_error</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> KFold, cross_validate, train_test_split</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Readable text in all figures</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>alt.themes.register(</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;report&quot;</span>,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span>: {</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;config&quot;</span>: {</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;axis&quot;</span>: {<span class="st">&quot;labelFontSize&quot;</span>: <span class="dv">12</span>, <span class="st">&quot;titleFontSize&quot;</span>: <span class="dv">13</span>},</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;title&quot;</span>: {<span class="st">&quot;fontSize&quot;</span>: <span class="dv">14</span>},</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;legend&quot;</span>: {<span class="st">&quot;labelFontSize&quot;</span>: <span class="dv">12</span>, <span class="st">&quot;titleFontSize&quot;</span>: <span class="dv">13</span>},</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>alt.themes.enable(<span class="st">&quot;report&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/bm/hrc4t95j61x7d8cb887n75sc0000gn/T/ipykernel_13599/2010776820.py:17: AltairDeprecationWarning: 
-Deprecated since `altair=5.5.0`. Use altair.theme instead.
-Most cases require only the following change:
-
-    # Deprecated
-    alt.themes.enable(&#39;quartz&#39;)
-
-    # Updated
-    alt.theme.enable(&#39;quartz&#39;)
-
-If your code registers a theme, make the following change:
-
-    # Deprecated
-    def custom_theme():
-        return {&#39;height&#39;: 400, &#39;width&#39;: 700}
-    alt.themes.register(&#39;theme_name&#39;, custom_theme)
-    alt.themes.enable(&#39;theme_name&#39;)
-
-    # Updated
-    @alt.theme.register(&#39;theme_name&#39;, enable=True)
-    def custom_theme():
-        return alt.theme.ThemeConfig(
-            {&#39;height&#39;: 400, &#39;width&#39;: 700}
-        )
-
-See the updated User Guide for further details:
-    https://altair-viz.github.io/user_guide/api.html#theme
-    https://altair-viz.github.io/user_guide/customization.html#chart-themes
-  alt.themes.register(</code></pre>
-</div>
-<div id="setup" class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>ThemeRegistry.enable(&#39;report&#39;)</code></pre>
-</div>
 </div>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
@@ -2375,21 +2328,21 @@ See the updated User Guide for further details:
 <div id="load-raw" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="op">=</span> Path(<span class="st">&quot;../data/raw&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>raw_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&quot;https://jse.amstat.org/v19n3/decock/AmesHousing.txt&quot;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>raw_txt <span class="op">=</span> raw_dir <span class="op">/</span> <span class="st">&quot;AmesHousing.txt&quot;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>raw_csv <span class="op">=</span> raw_dir <span class="op">/</span> <span class="st">&quot;AmesHousing.csv&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    urlretrieve(url, raw_txt)               <span class="co"># unmodified copy of the original file</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> pd.read_csv(raw_txt, sep<span class="op">=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)    <span class="co"># the original file is tab-delimited</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> error:</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Download failed (</span><span class="sc">{</span>error<span class="sc">}</span><span class="ss">); using the previously saved copy.&quot;</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> pd.read_csv(raw_csv)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Raw data: </span><span class="sc">{</span>raw<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> rows, </span><span class="sc">{</span>raw<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> columns&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="op">=</span> Path(<span class="st">&quot;../data/raw&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>raw_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&quot;https://jse.amstat.org/v19n3/decock/AmesHousing.txt&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>raw_txt <span class="op">=</span> raw_dir <span class="op">/</span> <span class="st">&quot;AmesHousing.txt&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>raw_csv <span class="op">=</span> raw_dir <span class="op">/</span> <span class="st">&quot;AmesHousing.csv&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    urlretrieve(url, raw_txt)               <span class="co"># unmodified copy of the original file</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> pd.read_csv(raw_txt, sep<span class="op">=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)    <span class="co"># the original file is tab-delimited</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> error:</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Download failed (</span><span class="sc">{</span>error<span class="sc">}</span><span class="ss">); using the previously saved copy.&quot;</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> pd.read_csv(raw_csv)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Raw data: </span><span class="sc">{</span>raw<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> rows, </span><span class="sc">{</span>raw<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> columns&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Raw data: 2930 rows, 82 columns</code></pre>
@@ -2402,12 +2355,12 @@ See the updated User Guide for further details:
 <div id="clean-data" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cleaned <span class="op">=</span> raw[[<span class="st">&quot;Gr Liv Area&quot;</span>, <span class="st">&quot;Overall Qual&quot;</span>, <span class="st">&quot;SalePrice&quot;</span>]].copy()</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cleaned.columns <span class="op">=</span> [<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;overall_quality&quot;</span>, <span class="st">&quot;sale_price&quot;</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>cleaned[<span class="st">&quot;house_age&quot;</span>] <span class="op">=</span> <span class="dv">2026</span> <span class="op">-</span> raw[<span class="st">&quot;Year Built&quot;</span>]</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">&quot;../data/processed&quot;</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>cleaned.to_csv(<span class="st">&quot;../data/processed/ames_cleaned.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cleaned <span class="op">=</span> raw[[<span class="st">&quot;Gr Liv Area&quot;</span>, <span class="st">&quot;Overall Qual&quot;</span>, <span class="st">&quot;SalePrice&quot;</span>]].copy()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cleaned.columns <span class="op">=</span> [<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;overall_quality&quot;</span>, <span class="st">&quot;sale_price&quot;</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>cleaned[<span class="st">&quot;house_age&quot;</span>] <span class="op">=</span> <span class="dv">2026</span> <span class="op">-</span> raw[<span class="st">&quot;Year Built&quot;</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">&quot;../data/processed&quot;</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>cleaned.to_csv(<span class="st">&quot;../data/processed/ames_cleaned.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -2417,12 +2370,12 @@ See the updated User Guide for further details:
 <div id="split-data" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>train_df, test_df <span class="op">=</span> train_test_split(cleaned, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">552</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>train_df.to_csv(<span class="st">&quot;../data/processed/ames_train.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>test_df.to_csv(<span class="st">&quot;../data/processed/ames_test.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Training rows: </span><span class="sc">{</span><span class="bu">len</span>(train_df)<span class="sc">}</span><span class="ss">   Test rows: </span><span class="sc">{</span><span class="bu">len</span>(test_df)<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>train_df, test_df <span class="op">=</span> train_test_split(cleaned, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">552</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>train_df.to_csv(<span class="st">&quot;../data/processed/ames_train.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>test_df.to_csv(<span class="st">&quot;../data/processed/ames_test.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Training rows: </span><span class="sc">{</span><span class="bu">len</span>(train_df)<span class="sc">}</span><span class="ss">   Test rows: </span><span class="sc">{</span><span class="bu">len</span>(test_df)<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Training rows: 2344   Test rows: 586</code></pre>
@@ -2436,27 +2389,27 @@ See the updated User Guide for further details:
 <div id="cell-eda-summary" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> {</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;living_area&quot;</span>: <span class="st">&quot;Living area (sq ft)&quot;</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;house_age&quot;</span>: <span class="st">&quot;House age in 2026 (years)&quot;</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;overall_quality&quot;</span>: <span class="st">&quot;Overall quality (1-10)&quot;</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;sale_price&quot;</span>: <span class="st">&quot;Sale price (US$)&quot;</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;house_age&quot;</span>, <span class="st">&quot;overall_quality&quot;</span>]</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> (</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    train_df[features <span class="op">+</span> [<span class="st">&quot;sale_price&quot;</span>]]</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    .describe()</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    .T[[<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;std&quot;</span>, <span class="st">&quot;min&quot;</span>, <span class="st">&quot;50%&quot;</span>, <span class="st">&quot;max&quot;</span>]]</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    .rename(columns<span class="op">=</span>{<span class="st">&quot;mean&quot;</span>: <span class="st">&quot;Mean&quot;</span>, <span class="st">&quot;std&quot;</span>: <span class="st">&quot;Std. dev.&quot;</span>, <span class="st">&quot;min&quot;</span>: <span class="st">&quot;Min&quot;</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;50%&quot;</span>: <span class="st">&quot;Median&quot;</span>, <span class="st">&quot;max&quot;</span>: <span class="st">&quot;Max&quot;</span>})</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>summary[<span class="st">&quot;Correlation with price&quot;</span>] <span class="op">=</span> train_df.corr()[<span class="st">&quot;sale_price&quot;</span>]</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>summary.loc[<span class="st">&quot;sale_price&quot;</span>, <span class="st">&quot;Correlation with price&quot;</span>] <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> summary.rename(index<span class="op">=</span>labels).<span class="bu">round</span>(<span class="dv">2</span>)</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;living_area&quot;</span>: <span class="st">&quot;Living area (sq ft)&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;house_age&quot;</span>: <span class="st">&quot;House age in 2026 (years)&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;overall_quality&quot;</span>: <span class="st">&quot;Overall quality (1-10)&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;sale_price&quot;</span>: <span class="st">&quot;Sale price (US$)&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;house_age&quot;</span>, <span class="st">&quot;overall_quality&quot;</span>]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> (</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    train_df[features <span class="op">+</span> [<span class="st">&quot;sale_price&quot;</span>]]</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    .describe()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    .T[[<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;std&quot;</span>, <span class="st">&quot;min&quot;</span>, <span class="st">&quot;50%&quot;</span>, <span class="st">&quot;max&quot;</span>]]</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    .rename(columns<span class="op">=</span>{<span class="st">&quot;mean&quot;</span>: <span class="st">&quot;Mean&quot;</span>, <span class="st">&quot;std&quot;</span>: <span class="st">&quot;Std. dev.&quot;</span>, <span class="st">&quot;min&quot;</span>: <span class="st">&quot;Min&quot;</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;50%&quot;</span>: <span class="st">&quot;Median&quot;</span>, <span class="st">&quot;max&quot;</span>: <span class="st">&quot;Max&quot;</span>})</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>summary[<span class="st">&quot;Correlation with price&quot;</span>] <span class="op">=</span> train_df.corr()[<span class="st">&quot;sale_price&quot;</span>]</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>summary.loc[<span class="st">&quot;sale_price&quot;</span>, <span class="st">&quot;Correlation with price&quot;</span>] <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> summary.rename(index<span class="op">=</span>labels).<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="eda-summary" class="cell-output cell-output-display" data-execution_count="5">
+<div id="eda-summary" class="cell-output cell-output-display" data-execution_count="19">
 <div>
 
 
@@ -2519,59 +2472,59 @@ See the updated User Guide for further details:
 <div id="cell-fig-eda" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>price_axis <span class="op">=</span> alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">&quot;$,.0f&quot;</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_with_trend(column, x_title):</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    base <span class="op">=</span> alt.Chart(train_df)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    jitter <span class="op">=</span> column <span class="op">==</span> <span class="st">&quot;overall_quality&quot;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    x_field <span class="op">=</span> <span class="st">&quot;jittered&quot;</span> <span class="cf">if</span> jitter <span class="cf">else</span> column</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    points <span class="op">=</span> (</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        base.transform_calculate(jittered<span class="op">=</span><span class="ss">f&quot;datum.</span><span class="sc">{</span>column<span class="sc">}</span><span class="ss"> + (random() - 0.5) * 0.5&quot;</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        .mark_circle(opacity<span class="op">=</span><span class="fl">0.25</span>, size<span class="op">=</span><span class="dv">25</span>, color<span class="op">=</span><span class="st">&quot;steelblue&quot;</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        .encode(</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span>alt.X(<span class="ss">f&quot;</span><span class="sc">{</span>x_field<span class="sc">}</span><span class="ss">:Q&quot;</span>, title<span class="op">=</span>x_title, scale<span class="op">=</span>alt.Scale(zero<span class="op">=</span><span class="va">False</span>)),</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>alt.Y(<span class="st">&quot;sale_price:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Sale price (US$)&quot;</span>, axis<span class="op">=</span>price_axis),</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    trend <span class="op">=</span> (</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        base.transform_regression(column, <span class="st">&quot;sale_price&quot;</span>)</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        .mark_line(color<span class="op">=</span><span class="st">&quot;red&quot;</span>, size<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        .encode(</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span>alt.X(<span class="ss">f&quot;</span><span class="sc">{</span>column<span class="sc">}</span><span class="ss">:Q&quot;</span>, title<span class="op">=</span>x_title),</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>alt.Y(<span class="st">&quot;sale_price:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Sale price (US$)&quot;</span>, axis<span class="op">=</span>price_axis),</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (points <span class="op">+</span> trend).properties(width<span class="op">=</span><span class="dv">260</span>, height<span class="op">=</span><span class="dv">260</span>)</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    scatter_with_trend(<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;Living area (sq ft)&quot;</span>)</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> scatter_with_trend(<span class="st">&quot;house_age&quot;</span>, <span class="st">&quot;House age in 2026 (years)&quot;</span>)</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> scatter_with_trend(<span class="st">&quot;overall_quality&quot;</span>, <span class="st">&quot;Overall quality (1 = very poor, 10 = very excellent)&quot;</span>)</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>price_axis <span class="op">=</span> alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">&quot;$,.0f&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scatter_with_trend(column, x_title):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    base <span class="op">=</span> alt.Chart(train_df)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    jitter <span class="op">=</span> column <span class="op">==</span> <span class="st">&quot;overall_quality&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    x_field <span class="op">=</span> <span class="st">&quot;jittered&quot;</span> <span class="cf">if</span> jitter <span class="cf">else</span> column</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    points <span class="op">=</span> (</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        base.transform_calculate(jittered<span class="op">=</span><span class="ss">f&quot;datum.</span><span class="sc">{</span>column<span class="sc">}</span><span class="ss"> + (random() - 0.5) * 0.5&quot;</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        .mark_circle(opacity<span class="op">=</span><span class="fl">0.25</span>, size<span class="op">=</span><span class="dv">25</span>, color<span class="op">=</span><span class="st">&quot;steelblue&quot;</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        .encode(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span>alt.X(<span class="ss">f&quot;</span><span class="sc">{</span>x_field<span class="sc">}</span><span class="ss">:Q&quot;</span>, title<span class="op">=</span>x_title, scale<span class="op">=</span>alt.Scale(zero<span class="op">=</span><span class="va">False</span>)),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>alt.Y(<span class="st">&quot;sale_price:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Sale price (US$)&quot;</span>, axis<span class="op">=</span>price_axis),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    trend <span class="op">=</span> (</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        base.transform_regression(column, <span class="st">&quot;sale_price&quot;</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        .mark_line(color<span class="op">=</span><span class="st">&quot;red&quot;</span>, size<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        .encode(</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span>alt.X(<span class="ss">f&quot;</span><span class="sc">{</span>column<span class="sc">}</span><span class="ss">:Q&quot;</span>, title<span class="op">=</span>x_title),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>alt.Y(<span class="st">&quot;sale_price:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Sale price (US$)&quot;</span>, axis<span class="op">=</span>price_axis),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (points <span class="op">+</span> trend).properties(width<span class="op">=</span><span class="dv">260</span>, height<span class="op">=</span><span class="dv">260</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    scatter_with_trend(<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;Living area (sq ft)&quot;</span>)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> scatter_with_trend(<span class="st">&quot;house_age&quot;</span>, <span class="st">&quot;House age in 2026 (years)&quot;</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> scatter_with_trend(<span class="st">&quot;overall_quality&quot;</span>, <span class="st">&quot;Overall quality (1 = very poor, 10 = very excellent)&quot;</span>)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="fig-eda" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<div id="fig-eda" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="20">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-eda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 
 <style>
-#altair-viz-8e8055331fdd428c8fed1d0cf613d00f.vega-embed {
+#altair-viz-3f9fa3612e074eaba171c9d169b6d7be.vega-embed {
 width: 100%;
 display: flex;
 }
-#altair-viz-8e8055331fdd428c8fed1d0cf613d00f.vega-embed details,
-#altair-viz-8e8055331fdd428c8fed1d0cf613d00f.vega-embed details summary {
+#altair-viz-3f9fa3612e074eaba171c9d169b6d7be.vega-embed details,
+#altair-viz-3f9fa3612e074eaba171c9d169b6d7be.vega-embed details summary {
 position: relative;
 }
 </style>
-<div id="altair-viz-8e8055331fdd428c8fed1d0cf613d00f"></div>
+<div id="altair-viz-3f9fa3612e074eaba171c9d169b6d7be"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-8e8055331fdd428c8fed1d0cf613d00f") {
-      outputDiv = document.getElementById("altair-viz-8e8055331fdd428c8fed1d0cf613d00f");
+    if (outputDiv.id !== "altair-viz-3f9fa3612e074eaba171c9d169b6d7be") {
+      outputDiv = document.getElementById("altair-viz-3f9fa3612e074eaba171c9d169b6d7be");
     }
 
     const paths = {
@@ -2636,33 +2589,33 @@ Figure 1
 <div id="preprocessing-baseline" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>numeric_features <span class="op">=</span> [<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;house_age&quot;</span>, <span class="st">&quot;overall_quality&quot;</span>]</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> train_df[numeric_features]</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> train_df[<span class="st">&quot;sale_price&quot;</span>]</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> test_df[numeric_features]</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> test_df[<span class="st">&quot;sale_price&quot;</span>]</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[(<span class="st">&quot;numeric&quot;</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">&quot;median&quot;</span>), numeric_features)],</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">&quot;drop&quot;</span>,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>dummy_pipeline <span class="op">=</span> Pipeline(</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    steps<span class="op">=</span>[(<span class="st">&quot;preprocessor&quot;</span>, preprocessor), (<span class="st">&quot;regressor&quot;</span>, DummyRegressor(strategy<span class="op">=</span><span class="st">&quot;mean&quot;</span>))]</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">552</span>)</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>scoring <span class="op">=</span> {<span class="st">&quot;rmse&quot;</span>: <span class="st">&quot;neg_root_mean_squared_error&quot;</span>, <span class="st">&quot;r2&quot;</span>: <span class="st">&quot;r2&quot;</span>}</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>dummy_cv <span class="op">=</span> cross_validate(</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    dummy_pipeline, X_train, y_train, cv<span class="op">=</span>cv, scoring<span class="op">=</span>scoring, error_score<span class="op">=</span><span class="st">&quot;raise&quot;</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co"># scikit-learn reports errors as negative numbers; convert RMSE back to positive dollars</span></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>fold_scores <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;RMSE (US$)&quot;</span>: <span class="op">-</span>dummy_cv[<span class="st">&quot;test_rmse&quot;</span>], <span class="st">&quot;R-squared&quot;</span>: dummy_cv[<span class="st">&quot;test_r2&quot;</span>]}</span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>numeric_features <span class="op">=</span> [<span class="st">&quot;living_area&quot;</span>, <span class="st">&quot;house_age&quot;</span>, <span class="st">&quot;overall_quality&quot;</span>]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> train_df[numeric_features]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> train_df[<span class="st">&quot;sale_price&quot;</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> test_df[numeric_features]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> test_df[<span class="st">&quot;sale_price&quot;</span>]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[(<span class="st">&quot;numeric&quot;</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">&quot;median&quot;</span>), numeric_features)],</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">&quot;drop&quot;</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>dummy_pipeline <span class="op">=</span> Pipeline(</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    steps<span class="op">=</span>[(<span class="st">&quot;preprocessor&quot;</span>, preprocessor), (<span class="st">&quot;regressor&quot;</span>, DummyRegressor(strategy<span class="op">=</span><span class="st">&quot;mean&quot;</span>))]</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">552</span>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>scoring <span class="op">=</span> {<span class="st">&quot;rmse&quot;</span>: <span class="st">&quot;neg_root_mean_squared_error&quot;</span>, <span class="st">&quot;r2&quot;</span>: <span class="st">&quot;r2&quot;</span>}</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>dummy_cv <span class="op">=</span> cross_validate(</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    dummy_pipeline, X_train, y_train, cv<span class="op">=</span>cv, scoring<span class="op">=</span>scoring, error_score<span class="op">=</span><span class="st">&quot;raise&quot;</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># scikit-learn reports errors as negative numbers; convert RMSE back to positive dollars</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>fold_scores <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;RMSE (US$)&quot;</span>: <span class="op">-</span>dummy_cv[<span class="st">&quot;test_rmse&quot;</span>], <span class="st">&quot;R-squared&quot;</span>: dummy_cv[<span class="st">&quot;test_r2&quot;</span>]}</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -2672,26 +2625,26 @@ Figure 1
 <div id="linear-model-cv" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>linear_pipeline <span class="op">=</span> clone(dummy_pipeline).set_params(regressor<span class="op">=</span>LinearRegression())</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>linear_cv <span class="op">=</span> cross_validate(</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    linear_pipeline, X_train, y_train, cv<span class="op">=</span>cv, scoring<span class="op">=</span>scoring, error_score<span class="op">=</span><span class="st">&quot;raise&quot;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>linear_fold_scores <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;RMSE (US$)&quot;</span>: <span class="op">-</span>linear_cv[<span class="st">&quot;test_rmse&quot;</span>], <span class="st">&quot;R-squared&quot;</span>: linear_cv[<span class="st">&quot;test_r2&quot;</span>]}</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>linear_pipeline <span class="op">=</span> clone(dummy_pipeline).set_params(regressor<span class="op">=</span>LinearRegression())</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>linear_cv <span class="op">=</span> cross_validate(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    linear_pipeline, X_train, y_train, cv<span class="op">=</span>cv, scoring<span class="op">=</span>scoring, error_score<span class="op">=</span><span class="st">&quot;raise&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>linear_fold_scores <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;RMSE (US$)&quot;</span>: <span class="op">-</span>linear_cv[<span class="st">&quot;test_rmse&quot;</span>], <span class="st">&quot;R-squared&quot;</span>: linear_cv[<span class="st">&quot;test_r2&quot;</span>]}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Finally, we fit the pipeline on the full training set and evaluate it once on the held-out test set. The coefficients come from this final fit.</p>
 <div id="final-fit" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>linear_pipeline.fit(X_train, y_train)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>linear_test_predictions <span class="op">=</span> linear_pipeline.predict(X_test)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>dummy_final <span class="op">=</span> clone(dummy_pipeline).fit(X_train, y_train)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>dummy_test_predictions <span class="op">=</span> dummy_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>linear_pipeline.fit(X_train, y_train)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>linear_test_predictions <span class="op">=</span> linear_pipeline.predict(X_test)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>dummy_final <span class="op">=</span> clone(dummy_pipeline).fit(X_train, y_train)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>dummy_test_predictions <span class="op">=</span> dummy_final.predict(X_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -2710,26 +2663,26 @@ Figure 1
 <div id="cell-model-comparison" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model_cv_summary <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        model_name: {</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;RMSE, mean (US$)&quot;</span>: scores[<span class="st">&quot;RMSE (US$)&quot;</span>].mean(),</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;RMSE, std. dev. (US$)&quot;</span>: scores[<span class="st">&quot;RMSE (US$)&quot;</span>].std(),</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;R², mean&quot;</span>: scores[<span class="st">&quot;R-squared&quot;</span>].mean(),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;R², std. dev.&quot;</span>: scores[<span class="st">&quot;R-squared&quot;</span>].std(),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> model_name, scores <span class="kw">in</span> {</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Baseline (always predict the mean price)&quot;</span>: fold_scores,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Multiple linear regression&quot;</span>: linear_fold_scores,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        }.items()</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>).T</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>model_cv_summary.<span class="bu">round</span>(</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;RMSE, mean (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;RMSE, std. dev. (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;R², mean&quot;</span>: <span class="dv">3</span>, <span class="st">&quot;R², std. dev.&quot;</span>: <span class="dv">3</span>}</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model_cv_summary <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        model_name: {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;RMSE, mean (US$)&quot;</span>: scores[<span class="st">&quot;RMSE (US$)&quot;</span>].mean(),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;RMSE, std. dev. (US$)&quot;</span>: scores[<span class="st">&quot;RMSE (US$)&quot;</span>].std(),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;R², mean&quot;</span>: scores[<span class="st">&quot;R-squared&quot;</span>].mean(),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;R², std. dev.&quot;</span>: scores[<span class="st">&quot;R-squared&quot;</span>].std(),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> model_name, scores <span class="kw">in</span> {</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Baseline (always predict the mean price)&quot;</span>: fold_scores,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Multiple linear regression&quot;</span>: linear_fold_scores,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        }.items()</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>).T</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>model_cv_summary.<span class="bu">round</span>(</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;RMSE, mean (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;RMSE, std. dev. (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;R², mean&quot;</span>: <span class="dv">3</span>, <span class="st">&quot;R², std. dev.&quot;</span>: <span class="dv">3</span>}</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="model-comparison" class="cell-output cell-output-display" data-execution_count="10">
+<div id="model-comparison" class="cell-output cell-output-display" data-execution_count="24">
 <div>
 
 
@@ -2773,27 +2726,27 @@ Figure 1
 <div id="cell-linear-model-test" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>test_metrics <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test RMSE (US$)&quot;</span>: [</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>            root_mean_squared_error(y_test, dummy_test_predictions),</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>            root_mean_squared_error(y_test, linear_test_predictions),</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test MAE (US$)&quot;</span>: [</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            mean_absolute_error(y_test, dummy_test_predictions),</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            mean_absolute_error(y_test, linear_test_predictions),</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test R²&quot;</span>: [</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>            r2_score(y_test, dummy_test_predictions),</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>            r2_score(y_test, linear_test_predictions),</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        ],</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;Baseline (always predict the mean price)&quot;</span>, <span class="st">&quot;Multiple linear regression&quot;</span>],</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>test_metrics.<span class="bu">round</span>({<span class="st">&quot;Test RMSE (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;Test MAE (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;Test R²&quot;</span>: <span class="dv">3</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>test_metrics <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test RMSE (US$)&quot;</span>: [</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>            root_mean_squared_error(y_test, dummy_test_predictions),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>            root_mean_squared_error(y_test, linear_test_predictions),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test MAE (US$)&quot;</span>: [</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>            mean_absolute_error(y_test, dummy_test_predictions),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            mean_absolute_error(y_test, linear_test_predictions),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Test R²&quot;</span>: [</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>            r2_score(y_test, dummy_test_predictions),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>            r2_score(y_test, linear_test_predictions),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;Baseline (always predict the mean price)&quot;</span>, <span class="st">&quot;Multiple linear regression&quot;</span>],</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>test_metrics.<span class="bu">round</span>({<span class="st">&quot;Test RMSE (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;Test MAE (US$)&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;Test R²&quot;</span>: <span class="dv">3</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="linear-model-test" class="cell-output cell-output-display" data-execution_count="11">
+<div id="linear-model-test" class="cell-output cell-output-display" data-execution_count="25">
 <div>
 
 
@@ -2831,51 +2784,51 @@ Figure 1
 <div id="cell-fig-predictions" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pred_df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;actual&quot;</span>: y_test.to_numpy(), <span class="st">&quot;predicted&quot;</span>: linear_test_predictions}</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>axis_min <span class="op">=</span> <span class="bu">float</span>(<span class="bu">min</span>(pred_df.<span class="bu">min</span>()))</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>axis_max <span class="op">=</span> <span class="bu">float</span>(<span class="bu">max</span>(pred_df.<span class="bu">max</span>()))</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>shared_scale <span class="op">=</span> alt.Scale(domain<span class="op">=</span>[axis_min, axis_max])</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> (</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    alt.Chart(pred_df)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    .mark_circle(opacity<span class="op">=</span><span class="fl">0.35</span>, size<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">&quot;steelblue&quot;</span>)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    .encode(</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span>alt.X(<span class="st">&quot;actual:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Actual sale price (US$)&quot;</span>, scale<span class="op">=</span>shared_scale,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">&quot;$,.0f&quot;</span>)),</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span>alt.Y(<span class="st">&quot;predicted:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Predicted sale price (US$)&quot;</span>, scale<span class="op">=</span>shared_scale,</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">&quot;$,.0f&quot;</span>)),</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>identity <span class="op">=</span> (</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    alt.Chart(pd.DataFrame({<span class="st">&quot;x&quot;</span>: [axis_min, axis_max], <span class="st">&quot;y&quot;</span>: [axis_min, axis_max]}))</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    .mark_line(color<span class="op">=</span><span class="st">&quot;red&quot;</span>, strokeDash<span class="op">=</span>[<span class="dv">6</span>, <span class="dv">4</span>], size<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    .encode(x<span class="op">=</span><span class="st">&quot;x:Q&quot;</span>, y<span class="op">=</span><span class="st">&quot;y:Q&quot;</span>)</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>(points <span class="op">+</span> identity).properties(width<span class="op">=</span><span class="dv">450</span>, height<span class="op">=</span><span class="dv">450</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pred_df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;actual&quot;</span>: y_test.to_numpy(), <span class="st">&quot;predicted&quot;</span>: linear_test_predictions}</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>axis_min <span class="op">=</span> <span class="bu">float</span>(<span class="bu">min</span>(pred_df.<span class="bu">min</span>()))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>axis_max <span class="op">=</span> <span class="bu">float</span>(<span class="bu">max</span>(pred_df.<span class="bu">max</span>()))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>shared_scale <span class="op">=</span> alt.Scale(domain<span class="op">=</span>[axis_min, axis_max])</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> (</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    alt.Chart(pred_df)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    .mark_circle(opacity<span class="op">=</span><span class="fl">0.35</span>, size<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">&quot;steelblue&quot;</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    .encode(</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span>alt.X(<span class="st">&quot;actual:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Actual sale price (US$)&quot;</span>, scale<span class="op">=</span>shared_scale,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">&quot;$,.0f&quot;</span>)),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span>alt.Y(<span class="st">&quot;predicted:Q&quot;</span>, title<span class="op">=</span><span class="st">&quot;Predicted sale price (US$)&quot;</span>, scale<span class="op">=</span>shared_scale,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">&quot;$,.0f&quot;</span>)),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>identity <span class="op">=</span> (</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    alt.Chart(pd.DataFrame({<span class="st">&quot;x&quot;</span>: [axis_min, axis_max], <span class="st">&quot;y&quot;</span>: [axis_min, axis_max]}))</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    .mark_line(color<span class="op">=</span><span class="st">&quot;red&quot;</span>, strokeDash<span class="op">=</span>[<span class="dv">6</span>, <span class="dv">4</span>], size<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    .encode(x<span class="op">=</span><span class="st">&quot;x:Q&quot;</span>, y<span class="op">=</span><span class="st">&quot;y:Q&quot;</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>(points <span class="op">+</span> identity).properties(width<span class="op">=</span><span class="dv">450</span>, height<span class="op">=</span><span class="dv">450</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="fig-predictions" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="12">
+<div id="fig-predictions" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="26">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 
 <style>
-#altair-viz-5287acb66fd84c00a3fa2bf7e85f54f3.vega-embed {
+#altair-viz-08651b8a7a0d41529a0ab55be99f75e4.vega-embed {
 width: 100%;
 display: flex;
 }
-#altair-viz-5287acb66fd84c00a3fa2bf7e85f54f3.vega-embed details,
-#altair-viz-5287acb66fd84c00a3fa2bf7e85f54f3.vega-embed details summary {
+#altair-viz-08651b8a7a0d41529a0ab55be99f75e4.vega-embed details,
+#altair-viz-08651b8a7a0d41529a0ab55be99f75e4.vega-embed details summary {
 position: relative;
 }
 </style>
-<div id="altair-viz-5287acb66fd84c00a3fa2bf7e85f54f3"></div>
+<div id="altair-viz-08651b8a7a0d41529a0ab55be99f75e4"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-5287acb66fd84c00a3fa2bf7e85f54f3") {
-      outputDiv = document.getElementById("altair-viz-5287acb66fd84c00a3fa2bf7e85f54f3");
+    if (outputDiv.id !== "altair-viz-08651b8a7a0d41529a0ab55be99f75e4") {
+      outputDiv = document.getElementById("altair-viz-08651b8a7a0d41529a0ab55be99f75e4");
     }
 
     const paths = {
@@ -2940,19 +2893,19 @@ Figure 2
 <div id="cell-coefficients" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fitted <span class="op">=</span> linear_pipeline.named_steps[<span class="st">&quot;regressor&quot;</span>]</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>coef_table <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Change in predicted price (US$)&quot;</span>: <span class="bu">list</span>(fitted.coef_) <span class="op">+</span> [fitted.intercept_],</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Per&quot;</span>: [<span class="st">&quot;1 additional square foot&quot;</span>, <span class="st">&quot;1 additional year of age&quot;</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;1 additional quality point&quot;</span>, <span class="st">&quot;(intercept)&quot;</span>],</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;Living area&quot;</span>, <span class="st">&quot;House age&quot;</span>, <span class="st">&quot;Overall quality&quot;</span>, <span class="st">&quot;Intercept&quot;</span>],</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>coef_table[<span class="st">&quot;Change in predicted price (US$)&quot;</span>] <span class="op">=</span> coef_table[<span class="st">&quot;Change in predicted price (US$)&quot;</span>].<span class="bu">round</span>(<span class="dv">0</span>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>coef_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fitted <span class="op">=</span> linear_pipeline.named_steps[<span class="st">&quot;regressor&quot;</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>coef_table <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Change in predicted price (US$)&quot;</span>: <span class="bu">list</span>(fitted.coef_) <span class="op">+</span> [fitted.intercept_],</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Per&quot;</span>: [<span class="st">&quot;1 additional square foot&quot;</span>, <span class="st">&quot;1 additional year of age&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;1 additional quality point&quot;</span>, <span class="st">&quot;(intercept)&quot;</span>],</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;Living area&quot;</span>, <span class="st">&quot;House age&quot;</span>, <span class="st">&quot;Overall quality&quot;</span>, <span class="st">&quot;Intercept&quot;</span>],</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>coef_table[<span class="st">&quot;Change in predicted price (US$)&quot;</span>] <span class="op">=</span> coef_table[<span class="st">&quot;Change in predicted price (US$)&quot;</span>].<span class="bu">round</span>(<span class="dv">0</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>coef_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="coefficients" class="cell-output cell-output-display" data-execution_count="13">
+<div id="coefficients" class="cell-output cell-output-display" data-execution_count="27">
 <div>
 
 
