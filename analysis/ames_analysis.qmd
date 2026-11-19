@@ -116,10 +116,81 @@ chart_quality = points_quality + line_quality
 chart_area | chart_age | chart_quality
 ```
 
+### Processing pipeline and baseline
 
+We use living area, house age, and overall quality as numeric predictors.
+Median imputation is included in the preprocessing pipeline to handle missing
+predictor values. Predictors are retained in their original units.
 
+We evaluate a mean-prediction baseline using five-fold cross-validation within
+the training set. In each fold, the baseline predicts the mean sale price of
+that fold's training observations. Performance is summarized using root mean
+squared error (RMSE), measured in US dollars, and R-squared.
 
+```{python}
+#| label: preprocessing-baseline
 
+from sklearn.compose import ColumnTransformer
+from sklearn.dummy import DummyRegressor
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import KFold, cross_validate
+from sklearn.pipeline import Pipeline
+
+numeric_features = ["living_area", "house_age", "overall_quality"]
+
+X_train = train_df[numeric_features]
+y_train = train_df["sale_price"]
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numeric", SimpleImputer(strategy="median"), numeric_features)
+    ],
+    remainder="drop",
+)
+
+dummy_pipeline = Pipeline(
+    steps=[
+        ("preprocessor", preprocessor),
+        ("regressor", DummyRegressor(strategy="mean")),
+    ]
+)
+
+cv = KFold(n_splits=5, shuffle=True, random_state=552)
+
+cv_results = cross_validate(
+    dummy_pipeline,
+    X_train,
+    y_train,
+    cv=cv,
+    scoring={
+        "rmse": "neg_root_mean_squared_error",
+        "r2": "r2",
+    },
+    error_score="raise",
+)
+
+# Convert scikit-learn's negative RMSE scores back to positive errors.
+fold_scores = pd.DataFrame(
+    {
+        "RMSE (US$)": -cv_results["test_rmse"],
+        "R-squared": cv_results["test_r2"],
+    }
+)
+```
+
+```{python}
+#| label: tbl-dummy-baseline
+#| tbl-cap: "Mean and standard deviation of the dummy baseline scores across five cross-validation folds."
+
+baseline_summary = (
+    fold_scores
+    .agg(["mean", "std"])
+    .rename(index={"mean": "CV mean", "std": "CV standard deviation"})
+    .round(4)
+)
+
+baseline_summary
+```
 
 
 
