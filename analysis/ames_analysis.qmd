@@ -19,12 +19,59 @@ from sklearn.model_selection import train_test_split
 
 ### Data acquisition
 
-The raw data are saved, unmodified, in `data/raw/`.
+The original tab-delimited file is downloaded and saved unchanged in
+`data/raw/AmesHousing.txt`. A CSV copy is created for the existing analysis.
+This step changes the file format without cleaning or filtering the data.
 
 ```{python}
 #| label: load-raw
+
+from io import BytesIO
+import requests
+
+url = "https://jse.amstat.org/v19n3/decock/AmesHousing.txt"
+
+# Keep the existing CSV path.
 data = "../data/raw/AmesHousing.csv"
+txt_path = "../data/raw/AmesHousing.txt"
+
+# Download the original data.
+response = requests.get(url, timeout=30)
+response.raise_for_status()
+
+# Preserve text values during format conversion, including leading zeros,
+# empty fields, and literal NA labels.
+csv_copy = pd.read_csv(
+    BytesIO(response.content),
+    sep="\t",
+    encoding="utf-8-sig",
+    dtype=str,
+    keep_default_na=False,
+)
+
+required_columns = {
+    "Gr Liv Area", "Overall Qual", "Year Built", "SalePrice"
+}
+
+if (
+    csv_copy.shape != (2930, 82)
+    or not required_columns.issubset(csv_copy.columns)
+):
+    raise ValueError("Unexpected Ames Housing data format or dimensions.")
+
+os.makedirs("../data/raw", exist_ok=True)
+
+# Save the original download without changing its contents.
+with open(txt_path, "wb") as output:
+    output.write(response.content)
+
+# Create the CSV copy used by the existing analysis.
+csv_copy.to_csv(data, index=False, encoding="utf-8")
+
+# Keep the existing loading step and variable name.
 raw = pd.read_csv(data)
+
+raw.shape
 ```
 
 ### Cleaning
