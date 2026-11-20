@@ -1,6 +1,6 @@
 ---
 title: "Relating Living Area, Year Built, and Quality to House Sale Prices in Ames, Iowa"
-author: "Nikita Wadnikop, Xiangtian Ji, Paromita Sengupta, Atinuke Wole-Ilori"
+author: "Nikita Wadnikop, Xiangtian Ji, Paromita Senguv runupta, Atinuke Wole-Ilori"
 date: today
 format:
   html:
@@ -30,6 +30,21 @@ from sklearn.pipeline import Pipeline
 
 ```
 
+## Summary
+
+This study investigates how living area, house age, and overall quality are associated with residential sale prices in Ames, Iowa. Using the Ames Housing dataset, we applied multiple linear regression to examine these relationships and predict housing prices. Our results show that larger living areas and higher overall quality ratings are associated with higher sale prices, while older houses generally have lower prices. The model explained approximately 76% of the variation in sale prices on the test set, with an RMSE of approximately US$38,600. These findings suggest that property characteristics can provide useful insights into housing values. However, the model does not account for other important factors, such as neighborhood and location, which may limit its predictive accuracy.
+
+## Introduction
+
+Housing prices are influenced by various factors, including property size, age, quality, and location. Understanding these relationships can help buyers, sellers, and real estate professionals make informed decisions. Previous research has shown that property characteristics play an important role in determining housing values (Rosen, 1974; Sirmans et al., 2005).
+
+In this study, we investigate how living area, house age, and overall quality are associated with residential sale prices in Ames, Iowa, and how well these characteristics can predict sale prices.
+
+We use the Ames Housing dataset (De Cock, 2011), which contains 2,930 residential property sales from 2006 to 2010. Each row represents a property sale. Our explanatory variables are living area (square feet), house age (2026 minus year built), and overall quality (rated 1–10). The response variable is sale price in US dollars.
+
+We use multiple linear regression to examine these relationships and evaluate how accurately these characteristics predict housing prices.
+
+
 ## Methods
 
 ### Overview of the approach
@@ -56,8 +71,8 @@ raw_txt = raw_dir / "AmesHousing.txt"
 raw_csv = raw_dir / "AmesHousing.csv"
 
 try:
-    urlretrieve(url, raw_txt)               # unmodified copy of the original file
-    raw = pd.read_csv(raw_txt, sep="\t")    # the original file is tab-delimited
+    urlretrieve(url, raw_txt)  # unmodified copy of the original file
+    raw = pd.read_csv(raw_txt, sep="\t")  # the original file is tab-delimited
 except Exception as error:
     print(f"Download failed ({error}); using the previously saved copy.")
     raw = pd.read_csv(raw_csv)
@@ -113,8 +128,15 @@ summary = (
     train_df[features + ["sale_price"]]
     .describe()
     .T[["mean", "std", "min", "50%", "max"]]
-    .rename(columns={"mean": "Mean", "std": "Std. dev.", "min": "Min",
-                     "50%": "Median", "max": "Max"})
+    .rename(
+        columns={
+            "mean": "Mean",
+            "std": "Std. dev.",
+            "min": "Min",
+            "50%": "Median",
+            "max": "Max",
+        }
+    )
 )
 summary["Correlation with price"] = train_df.corr()["sale_price"]
 summary.loc["sale_price", "Correlation with price"] = None
@@ -155,7 +177,9 @@ def scatter_with_trend(column, x_title):
 (
     scatter_with_trend("living_area", "Living area (sq ft)")
     | scatter_with_trend("house_age", "House age in 2026 (years)")
-    | scatter_with_trend("overall_quality", "Overall quality (1 = very poor, 10 = very excellent)")
+    | scatter_with_trend(
+        "overall_quality", "Overall quality (1 = very poor, 10 = very excellent)"
+    )
 )
 ```
 
@@ -180,7 +204,10 @@ preprocessor = ColumnTransformer(
 )
 
 dummy_pipeline = Pipeline(
-    steps=[("preprocessor", preprocessor), ("regressor", DummyRegressor(strategy="mean"))]
+    steps=[
+        ("preprocessor", preprocessor),
+        ("regressor", DummyRegressor(strategy="mean")),
+    ]
 )
 
 cv = KFold(n_splits=5, shuffle=True, random_state=552)
@@ -256,7 +283,12 @@ model_cv_summary = pd.DataFrame(
 ).T
 
 model_cv_summary.round(
-    {"RMSE, mean (US$)": 0, "RMSE, std. dev. (US$)": 0, "R², mean": 3, "R², std. dev.": 3}
+    {
+        "RMSE, mean (US$)": 0,
+        "RMSE, std. dev. (US$)": 0,
+        "R², mean": 3,
+        "R², std. dev.": 3,
+    }
 )
 ```
 
@@ -310,10 +342,18 @@ points = (
     alt.Chart(pred_df)
     .mark_circle(opacity=0.35, size=40, color="steelblue")
     .encode(
-        x=alt.X("actual:Q", title="Actual sale price (US$)", scale=shared_scale,
-                axis=alt.Axis(format="$,.0f")),
-        y=alt.Y("predicted:Q", title="Predicted sale price (US$)", scale=shared_scale,
-                axis=alt.Axis(format="$,.0f")),
+        x=alt.X(
+            "actual:Q",
+            title="Actual sale price (US$)",
+            scale=shared_scale,
+            axis=alt.Axis(format="$,.0f"),
+        ),
+        y=alt.Y(
+            "predicted:Q",
+            title="Predicted sale price (US$)",
+            scale=shared_scale,
+            axis=alt.Axis(format="$,.0f"),
+        ),
     )
 )
 identity = (
@@ -336,12 +376,18 @@ fitted = linear_pipeline.named_steps["regressor"]
 coef_table = pd.DataFrame(
     {
         "Change in predicted price (US$)": list(fitted.coef_) + [fitted.intercept_],
-        "Per": ["1 additional square foot", "1 additional year of age",
-                "1 additional quality point", "(intercept)"],
+        "Per": [
+            "1 additional square foot",
+            "1 additional year of age",
+            "1 additional quality point",
+            "(intercept)",
+        ],
     },
     index=["Living area", "House age", "Overall quality", "Intercept"],
 )
-coef_table["Change in predicted price (US$)"] = coef_table["Change in predicted price (US$)"].round(0)
+coef_table["Change in predicted price (US$)"] = coef_table[
+    "Change in predicted price (US$)"
+].round(0)
 coef_table
 ```
 
