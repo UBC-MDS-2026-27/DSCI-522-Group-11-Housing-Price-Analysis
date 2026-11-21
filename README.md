@@ -91,11 +91,9 @@ AI-generated suggestions were reviewed and evaluated by team members. Final deci
 
 ## Rendered Report
 
-The analysis report is available in HTML format:
+The analysis report is available in HTML format and is hosted on GitHub Pages:
 
 [View the rendered analysis report](https://ubc-mds-2026-27.github.io/DSCI-522-Group-11-Housing-Price-Analysis/analysis/ames_analysis.html)
-
-A public GitHub Pages URL can be added here once the report has been deployed.
 
 ## Contributing
 
