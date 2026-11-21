@@ -1,12 +1,4 @@
 # License
-
-This repository uses two licenses:
-
-1. The **analysis report** is licensed under **CC BY-NC-SA 4.0**.
-2. The **software code** is licensed under the **MIT License**.
-
-The full text of each license is included below.
-
 ---
 
 # 1. Analysis report: CC BY-NC-SA 4.0
