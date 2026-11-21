@@ -1,6 +1,25 @@
 # Contributing to the Housing Price Analysis
 
-This outlines how to propose a change to the Housing Price project.
+This document explains how anyone, including people outside the core team, can
+report a bug, suggest a change, and submit their own work to the Housing Price
+project. In short: open an issue, make a branch, and open a pull request.
+
+### Reporting a bug
+
+1. Search the existing [issues](https://github.com/UBC-MDS-2026-27/DSCI-522-Group-11-Housing-Price-Analysis/issues)
+   to check that the bug has not already been reported.
+2. If it has not, open a new issue and describe what you expected to happen and
+   what happened instead.
+3. Include a minimal [reprex](https://www.tidyverse.org/help/#reprex): the
+   smallest piece of code and data that reproduces the problem, along with your
+   operating system and the output of `uv pip list` (or the relevant package
+   versions).
+
+### Suggesting a change
+
+Open an issue describing the change you would like to see, why it would improve
+the project, and (if you can) how you would approach it. Wait for a team member
+to agree before starting any substantial work, so that your effort is not wasted.
 
 ### Fixing typos
 
@@ -54,6 +73,44 @@ and commit both files.
    The reviewer, not the author, merges it.
 *  New code should follow the PEP8 [style guide](https://peps.python.org/pep-0008/).
 
+### AI policy
+
+Generative AI tools (e.g., ChatGPT, GitHub Copilot, Claude) may be used when
+contributing to this project, under the following rules.
+
+**What is allowed**
+
+*  Using AI tools to help you brainstorm, explain code or errors, draft or
+   refactor code, and improve the wording of documentation.
+*  Using AI-generated text or code in your contribution, provided you have read,
+   understood, and tested it, and can explain and defend every line.
+
+**What is not allowed**
+
+*  Opening, commenting on, reviewing, approving, or merging issues and pull
+   requests using an AI agent or any automated tool acting on your behalf.
+   Issues and pull requests are opened, reviewed, and merged by people.
+*  Submitting AI output you have not verified, including code that has not been
+   run, results you have not checked, or references you have not confirmed exist.
+*  Pasting private or sensitive data (credentials, tokens, personal information)
+   into an AI tool.
+
+**What you must disclose**
+
+*  State in your pull request description which AI tool(s) you used and what you
+   used them for (for example, "Claude was used to draft the docstrings in
+   `src/clean.py`").
+*  Mark substantial AI-generated passages of code or text in the pull request so
+   reviewers know where to look more carefully.
+
+**Who is responsible**
+
+The contributor is fully responsible for everything they submit, whether or not
+an AI tool helped produce it. This includes correctness, licensing, style, and
+the accuracy of the analysis and its interpretation. Reviewers may ask you to
+explain your changes and may close contributions that appear to be unreviewed
+AI output.
+
 ### Code of Conduct
 
 Please note that this project is released with a [Contributor Code of
@@ -63,3 +120,9 @@ abide by its terms.
 ### Attribution
 
 These contributing guidelines were adapted from the [dplyr contributing guidelines](https://github.com/tidyverse/dplyr/blob/master/.github/CONTRIBUTING.md).
+
+The AI policy was written with reference to the AI policies of
+[earthaccess](https://earthaccess.readthedocs.io/en/latest/contributor/ai-policy/),
+[SciPy](https://scipy.github.io/devdocs/dev/conduct/ai_policy.html), and
+[SymPy](https://docs.sympy.org/dev/contributing/ai-generated-code-policy.html).
+
