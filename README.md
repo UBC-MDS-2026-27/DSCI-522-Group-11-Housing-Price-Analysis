@@ -49,7 +49,7 @@ cd analysis
 Run the following command to render the Quarto report:
 
 ```bash
-uv run quarto render analysis/ames_analysis.qmd
+uv run quarto render ames_analysis.qmd
 ```
 
 The rendered HTML report will be generated as `analysis/ames_analysis.html`.
