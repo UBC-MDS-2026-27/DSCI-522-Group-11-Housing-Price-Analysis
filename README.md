@@ -76,11 +76,8 @@ This project uses two licenses:
 
 See [LICENSE.md](LICENSE.md) for more information.
 
+
 ## Generative AI Use
-
-Generative AI tools, ChatGPT & Claude AI, were used to assist with drafting and improving project documentation, including the README.
-
-### Generative AI Use
 
 Generative AI tools, including ChatGPT, were used to support brainstorming, understanding regression analysis concepts, reviewing project work, and proofreading documentation.
 
@@ -96,7 +93,7 @@ AI-generated suggestions were reviewed and evaluated by team members. Final deci
 
 The analysis report is available in HTML format:
 
-[View the rendered analysis report](analysis/ames_analysis.html)
+[View the rendered analysis report](https://ubc-mds-2026-27.github.io/DSCI-522-Group-11-Housing-Price-Analysis/analysis/ames_analysis.html)
 
 A public GitHub Pages URL can be added here once the report has been deployed.
 
