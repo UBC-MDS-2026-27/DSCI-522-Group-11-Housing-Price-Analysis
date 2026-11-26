@@ -1,0 +1,19 @@
+# Adapted from docker-uv-renv by Daniel Chen (MIT License)
+# https://github.com/chendaniely/docker-uv-renv
+
+services:
+  analysis-env:
+    image: atinuke2001/dsci-522-group-11-housing-price-analysis:sha-846a76e
+    ports:
+      - "2222:22"
+    volumes:
+      - .:/workspace
+      - ~/.ssh/id_ed25519.pub:/tmp/ssh-public-key.pub:ro
+      - ~/.gitconfig:/root/.gitconfig:ro
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        install -d -m 700 /root/.ssh
+        install -m 600 /tmp/ssh-public-key.pub /root/.ssh/authorized_keys
+        exec /usr/sbin/sshd -D
