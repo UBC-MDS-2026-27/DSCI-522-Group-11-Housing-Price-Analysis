@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'win32'",
@@ -402,7 +402,9 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "altair" },
+    { name = "ipykernel" },
     { name = "jupyter" },
+    { name = "nbclient" },
     { name = "pandas" },
     { name = "pyyaml" },
     { name = "requests" },
@@ -411,12 +413,14 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "altair", specifier = ">=6.3.0" },
-    { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "pandas", specifier = ">=3.1.1" },
-    { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "requests", specifier = ">=2.34.2" },
-    { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "altair", specifier = "==6.3.0" },
+    { name = "ipykernel", specifier = "==7.4.0" },
+    { name = "jupyter", specifier = "==1.1.1" },
+    { name = "nbclient", specifier = "==0.11.0" },
+    { name = "pandas", specifier = "==3.1.1" },
+    { name = "pyyaml", specifier = "==6.0.3" },
+    { name = "requests", specifier = "==2.34.2" },
+    { name = "scikit-learn", specifier = "==1.9.1" },
 ]
 
 [[package]]
