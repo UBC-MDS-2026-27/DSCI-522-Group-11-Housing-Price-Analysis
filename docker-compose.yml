@@ -8,12 +8,5 @@ services:
       - "2222:22"
     volumes:
       - .:/workspace
-      - ~/.ssh/id_ed25519.pub:/tmp/ssh-public-key.pub:ro
+      - ~/.ssh/id_ed25519.pub:/root/.ssh/authorized_keys:ro
       - ~/.gitconfig:/root/.gitconfig:ro
-    command:
-      - /bin/sh
-      - -ec
-      - |
-        install -d -m 700 /root/.ssh
-        install -m 600 /tmp/ssh-public-key.pub /root/.ssh/authorized_keys
-        exec /usr/sbin/sshd -D
