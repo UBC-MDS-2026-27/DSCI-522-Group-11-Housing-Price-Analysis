@@ -17,47 +17,62 @@ Our findings suggest that larger living areas and higher overall quality ratings
 
 These findings highlight the importance of property characteristics in understanding housing prices. However, the model does not account for other potentially important factors, such as neighborhood and location, and should not be used as a substitute for professional property valuation.
 
-## How to Run the Analysis
+## Report
+ 
+The analysis report is available in HTML format and is hosted on GitHub Pages:
+ 
+[View the rendered analysis report](https://ubc-mds-2026-27.github.io/DSCI-522-Group-11-Housing-Price-Analysis/)
 
-Follow the steps below to reproduce the analysis and generate the report.
-
-### 1. Clone the repository
-
+## Usage
+ 
+The analysis runs in a Docker container so that everyone uses the same software and package versions.
+ 
+### Setup
+ 
+Install [Git](https://git-scm.com/downloads) and [Docker Desktop](https://www.docker.com/products/docker-desktop/), then start Docker Desktop. On Windows, run the commands below in Git Bash. Clone this repository and enter its folder. Run all later commands from the root of the repository.
+ 
 ```bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group-11-Housing-Price-Analysis.git
 cd DSCI-522-Group-11-Housing-Price-Analysis
 ```
 
-### 2. Install dependencies
-
-Make sure Python 3.14, [uv](https://docs.astral.sh/uv/getting-started/installation/), and [Quarto](https://quarto.org/docs/get-started/) are installed.
-
-Run the following command from the repository root to create the Python environment and install the required packages:
-
+The container also reads your Git settings. If `git config --global user.email` prints nothing, set your name and email before continuing.
+ 
 ```bash
-uv sync
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 ```
-
-### 3. Render the report
-
-Navigate to the analysis directory:
-
+### 1. Make an SSH key
+ 
+If `~/.ssh/id_ed25519.pub` does not exist, create a key and press Enter at each question. Do not overwrite an existing key.
+ 
 ```bash
-cd analysis
+ssh-keygen -t ed25519
 ```
+ 
+The container uses this key for SSH login. Without it, Docker creates a folder named `~/.ssh/id_ed25519.pub`, and SSH login fails until you delete that folder and create the key.
 
-Run the following command to render the Quarto report:
-
+### 2. Download the image
+ 
 ```bash
-uv run quarto render ames_analysis.qmd
+docker compose pull
 ```
+ 
+ ### 3. Render the report
+ 
+```bash
+docker compose run --rm analysis-env uv run quarto render analysis/ames_analysis.qmd
+```
+ 
+With the `--rm` option, the container is removed automatically when rendering finishes. Open `analysis/ames_analysis.html` in your browser to read the new report.
 
-The rendered HTML report will be generated as `analysis/ames_analysis.html`.
+
 
 ## Dependencies
 
 The project uses Python 3.14 and the following tools and libraries:
-
+- **Git** - Run analysis
+- **Dockerfile** - How project image is built 
 - **uv** – Python environment and dependency management
 - **Quarto** – Report generation
 - **pandas** – Data cleaning and manipulation
@@ -79,7 +94,7 @@ See [LICENSE.md](LICENSE.md) for more information.
 
 ## Generative AI Use
 
-Generative AI tools, including ChatGPT, were used to support brainstorming, understanding regression analysis concepts, reviewing project work, and proofreading documentation.
+Generative AI tools, including ChatGPT and Claude, were used to support brainstorming, understanding regression analysis concepts, reviewing project work, and proofreading documentation.
 
 Examples of prompts used include:
 
@@ -89,11 +104,6 @@ Examples of prompts used include:
 
 AI-generated suggestions were reviewed and evaluated by team members. Final decisions regarding the analysis, interpretation, and documentation were made by the team.
 
-## Rendered Report
-
-The analysis report is available in HTML format and is hosted on GitHub Pages:
-
-[View the rendered analysis report](https://ubc-mds-2026-27.github.io/DSCI-522-Group-11-Housing-Price-Analysis/analysis/ames_analysis.html)
 
 ## Contributing
 
@@ -109,5 +119,8 @@ Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines a
 - Sirmans, G. S., Macpherson, D. A., & Zietz, E. N. (2005). The composition of hedonic pricing models. *Journal of Real Estate Literature, 13*(1), 3–43.
 - VanderPlas, J., Granger, B., Heer, J., Moritz, D., Wongsuphasawat, K., Satyanarayan, A., … Sievert, S. (2018). Altair: Interactive statistical visualizations for Python. *Journal of Open Source Software, 3*(32), 1057. <https://doi.org/10.21105/joss.01057>
 
+## Attribution
+
+The structure of this README was adapted from the course's [Breast Cancer Predictor example README](https://github.com/UBC-MDS/DSCI_522_project-template-breast-cancer-predictor/blob/1.0.0/README.md).
 
 
