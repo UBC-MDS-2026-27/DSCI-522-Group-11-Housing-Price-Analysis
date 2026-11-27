@@ -3,7 +3,7 @@
 
 services:
   analysis-env:
-    image: atinuke2001/dsci-522-group-11-housing-price-analysis:sha-7d6c3e2
+    image: atinuke2001/dsci-522-group-11-housing-price-analysis:sha-2fc0bc7
     ports:
       - "2222:22"
     volumes:
